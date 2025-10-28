@@ -97,7 +97,6 @@ export function CarCard({
     setIsDragging(true);
   };
 
-
   const getFeatureIcon = (feature: string) => {
     const normalized = feature.toLowerCase();
     if (normalized.includes("klima"))
@@ -168,9 +167,9 @@ export function CarCard({
           transition: { duration: 0.5 },
         }}
       >
-        <div className="relative w-full h-full bg-white rounded-2xl car-card-shadow pointer-events-auto border border-gray-200 shadow-sm flex flex-col" style={{overflowY: 'hidden'}}>
+        <div className="relative w-full bg-white rounded-2xl car-card-shadow pointer-events-auto border border-gray-200 shadow-sm flex flex-col">
           {/* Araç Resmi */}
-          <div className="relative h-7/12 w-full car-card-image pointer-events-none">
+          <div className="relative h-96 w-full car-card-image pointer-events-none flex-shrink-0">
             <Image
               src={car.image}
               alt={`${car.brand} ${car.model}`}
@@ -179,11 +178,17 @@ export function CarCard({
               priority={isTop}
             />
 
-
             {/* Yakıt Türü */}
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
               <span className="text-white text-sm font-medium">
                 {car.fuelType}
+              </span>
+            </div>
+
+            {/* Uzaklık */}
+            <div className="absolute bottom-2 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+              <span className="text-white text-sm font-medium">
+                {car.location} • {car.away}km uzakta
               </span>
             </div>
 
@@ -207,58 +212,54 @@ export function CarCard({
           </div>
 
           {/* Araç Bilgileri */}
-          <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between car-card-content pointer-events-none overflow-hidden" style={{overflow: 'hidden', maxHeight: '100%'}}>
-            <div>
-              <div className="flex items-start justify-between mb-1">
+          <div className="p-4 flex flex-col justify-between car-card-content pointer-events-none space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">
+                  <h2 className="text-lg font-bold text-gray-900">
                     {car.brand} {car.model}
                   </h2>
                   <p className="text-gray-600 text-sm">
                     {car.year} • {car.transmission}
                   </p>
                 </div>
+
                 {/* Fiyat Etiketi */}
-                <div className="bg-blue-100 rounded-lg px-2 py-1.5 shadow-sm border border-blue-200">
+                <div className="bg-blue-100 rounded-lg px-2.5 py-1.5 shadow-sm border border-blue-200">
                   <div className="flex flex-col items-end space-y-0.5">
                     <div className="flex items-center space-x-1">
-                      <span className="text-sm font-bold text-red-600">
+                      <span className="text-base font-bold text-red-600">
                         ₺{car.price}
                       </span>
-                      <span className="text-xs text-black">/gün</span>
+                      <span className="text-sm text-black">/gün</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <span className="text-xs font-semibold text-red-500">
+                      <span className="text-base font-bold text-red-600">
                         ₺{car.price * 7}
                       </span>
-                      <span className="text-xs text-black">/hafta</span>
+                      <span className="text-sm text-black">/hafta</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mb-1">
-                {car.location},{" "}
-                <span className="font-bold">{car.away}km uzakta </span>{" "}
-              </p>
             </div>
 
             {/* rejecter info favorite button */}
-
             <div className="flex items-center justify-between">
               <div className="flex gap-2 pointer-events-auto justify-between w-full">
                 <button
                   onClick={onReject}
-                  className="w-14 h-14 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-12 h-12 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <span className="text-red-500 text-2xl">
+                  <span className="text-red-500 text-xl">
                     <IoMdClose />
                   </span>
                 </button>
 
                 <Dialog>
                   <DialogTrigger asChild>
-                    <button className="w-14 h-14 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center transition-colors cursor-pointer">
-                      <span className="text-blue-500 text-2xl">
+                    <button className="w-12 h-12 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center transition-colors cursor-pointer">
+                      <span className="text-blue-500 text-xl">
                         <IoMdInformationCircleOutline />
                       </span>
                     </button>
@@ -287,21 +288,16 @@ export function CarCard({
                     </DialogTitle>
                     <div className="mt-3">
                       <ul className="mt-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {car.rentalConditions.map(
-                          (rentalCondition, index) => (
-                            <li
-                              key={index}
-                              className="flex items-start gap-3"
-                            >
-                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50">
-                                {getConditionIcon(rentalCondition)}
-                              </span>
-                              <span className="text-gray-800 leading-6">
-                                {rentalCondition}
-                              </span>
-                            </li>
-                          )
-                        )}
+                        {car.rentalConditions.map((rentalCondition, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50">
+                              {getConditionIcon(rentalCondition)}
+                            </span>
+                            <span className="text-gray-800 leading-6">
+                              {rentalCondition}
+                            </span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </DialogContent>
@@ -309,18 +305,18 @@ export function CarCard({
 
                 <button
                   onClick={onLike}
-                  className="w-14 h-14 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-12 h-12 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <span className="text-green-500 text-2xl">
+                  <span className="text-green-500 text-xl">
                     <FaHeart />
                   </span>
                 </button>
               </div>
             </div>
 
-            <div>
+            <div className="pt-2">
               <button className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between">
-                <span className="text-white font-bold text-lg">
+                <span className="text-white font-bold text-sm">
                   HEMEN KİRALA
                 </span>
                 <MdKeyboardArrowRight className="text-white text-2xl" />

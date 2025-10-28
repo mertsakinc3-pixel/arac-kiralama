@@ -71,7 +71,7 @@ const CardSwipeContainer = ({
       </div>
 
       {/* Kartlar Container */}
-      <div className="relative h-[650px] sm:h-[700px] w-full car-card-container">
+      <div className="relative w-full car-card-container" style={{ minHeight: '650px' }}>
         <AnimatePresence>
           {currentCar && (
             <CarCard

@@ -104,15 +104,23 @@ const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
                   <span className="font-medium">Çıkış Yap</span>
                 </button>
                 
-                <button className="flex items-center gap-4 p-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors w-full">
+                <a
+                  href="/login"
+                  className="flex items-center gap-4 p-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors w-full"
+                  onClick={onClose}
+                >
                   <IoLogInOutline className="text-2xl" />
                   <span className="font-medium">Giriş Yap</span>
-                </button>
+                </a>
                 
-                <button className="flex items-center gap-4 p-3 text-green-600 hover:bg-green-50 rounded-lg transition-colors w-full">
+                <a
+                  href="/register"
+                  className="flex items-center gap-4 p-3 text-green-600 hover:bg-green-50 rounded-lg transition-colors w-full"
+                  onClick={onClose}
+                >
                   <IoPersonAddOutline className="text-2xl" />
                   <span className="font-medium">Kayıt Ol</span>
-                </button>
+                </a>
               </motion.div>
             </nav>
           </motion.div>
