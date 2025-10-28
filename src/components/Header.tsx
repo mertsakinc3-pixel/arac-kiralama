@@ -1,25 +1,22 @@
 "use client";
 
-import { useState, useImperativeHandle, forwardRef } from "react";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { IoMenu, IoFilter } from "react-icons/io5";
 import SideMenu from "./SideMenu";
+import { useFilter } from "@/contexts/FilterContext";
 
-export interface HeaderRef {
-  openFilter: () => void;
-}
-
-interface HeaderProps {
-  onFilterClick?: () => void;
-}
-
-const Header = forwardRef<HeaderRef, HeaderProps>(({ onFilterClick }, ref) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setIsFilterOpen } = useFilter();
+  const pathname = usePathname();
 
-  useImperativeHandle(ref, () => ({
-    openFilter: () => {
-      onFilterClick?.();
-    }
-  }));
+  const handleFilterClick = () => {
+    setIsFilterOpen(true);
+  };
+
+  // Filter ikonu sadece arac-kirala sayfasında görünsün
+  const showFilterIcon = pathname === "/arac-kirala";
 
   return (
     <>
@@ -38,20 +35,20 @@ const Header = forwardRef<HeaderRef, HeaderProps>(({ onFilterClick }, ref) => {
           <h1 className="text-2xl font-bold">KiralamaYeri</h1>
         </div>
 
-        {/* Right filter menu */}
+        {/* Right filter menu - sadece arac-kirala sayfasında görünür */}
 
         <div>
-          <button onClick={onFilterClick}>
-            <IoFilter className="text-2xl" />
-          </button>
+          {showFilterIcon && (
+            <button onClick={handleFilterClick}>
+              <IoFilter className="text-2xl" />
+            </button>
+          )}
         </div>
       </header>
 
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </>
   );
-});
-
-Header.displayName = "Header";
+};
 
 export default Header;

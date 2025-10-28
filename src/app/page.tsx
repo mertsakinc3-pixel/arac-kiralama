@@ -1,24 +1,19 @@
-"use client";
-
-import { useState, useRef } from "react";
-import CardSwipeContainer from "@/components/CardCard/CardSwipeContainer";
-import Header, { HeaderRef } from "@/components/Header";
+import LocationComponent from "@/components/LocationComponent";
 
 export default function Home() {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const headerRef = useRef<HeaderRef>(null);
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden">
-      <Header 
-        ref={headerRef}
-        onFilterClick={() => setIsFilterOpen(true)}
-      />
+    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden mt-4">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Araç Kiralama Uygulaması
+        </h1>
+        <p className="text-lg text-gray-600 mb-8">
+          Hoş geldiniz! Araç kiralamak için menüden &quot;Araç Kirala&quot;
+          seçeneğini kullanabilirsiniz.
+        </p>
 
-      <CardSwipeContainer 
-        isFilterOpen={isFilterOpen}
-        setIsFilterOpen={setIsFilterOpen}
-      />
+        <LocationComponent />
+      </div>
     </div>
   );
 }
