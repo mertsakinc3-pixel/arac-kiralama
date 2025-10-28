@@ -17,6 +17,7 @@ export interface Car {
   rentalCompany: string; // Kiralama şirketi
   deliveryType: "Kapıda" | "Şubede"; // Araç teslim şekli
   deposit: number; // Depozito
+  rentalConditions: string[]; // Kiralama koşulları
 }
 
 export const mockCars: Car[] = [
@@ -41,6 +42,12 @@ export const mockCars: Car[] = [
     rentalCompany: "Premium Kiralama",
     deliveryType: "Kapıda",
     deposit: 5000,
+    rentalConditions: [
+      "1 Yıl Ehliyet",
+      "3500 km",
+      "21 Yaş",
+      "2,500 TL Depozito",
+    ],
   },
   {
     id: "2",
@@ -63,6 +70,12 @@ export const mockCars: Car[] = [
     rentalCompany: "Luxury Car Rental",
     deliveryType: "Şubede",
     deposit: 6000,
+    rentalConditions: [
+      "2 Yıl Ehliyet",
+      "4000 km",
+      "25 Yaş",
+      "3,000 TL Depozito",
+    ],
   },
   {
     id: "3",
@@ -85,6 +98,12 @@ export const mockCars: Car[] = [
     rentalCompany: "GreenDrive",
     deliveryType: "Kapıda",
     deposit: 5500,
+    rentalConditions: [
+      "1 Yıl Ehliyet",
+      "3000 km",
+      "23 Yaş",
+      "2,800 TL Depozito",
+    ],
   },
   {
     id: "4",
@@ -107,6 +126,12 @@ export const mockCars: Car[] = [
     rentalCompany: "Budget Rent a Car",
     deliveryType: "Şubede",
     deposit: 3000,
+    rentalConditions: [
+      "1 Yıl Ehliyet",
+      "2500 km",
+      "20 Yaş",
+      "2,000 TL Depozito",
+    ],
   },
   {
     id: "5",
@@ -129,6 +154,12 @@ export const mockCars: Car[] = [
     rentalCompany: "EcoDrive",
     deliveryType: "Kapıda",
     deposit: 3500,
+    rentalConditions: [
+      "1 Yıl Ehliyet",
+      "3000 km",
+      "22 Yaş",
+      "2,500 TL Depozito",
+    ],
   },
   {
     id: "6",
@@ -150,5 +181,11 @@ export const mockCars: Car[] = [
     rentalCompany: "Economy Rent",
     deliveryType: "Şubede",
     deposit: 2800,
+    rentalConditions: [
+      "1 Yıl Ehliyet",
+      "2000 km",
+      "21 Yaş",
+      "1,800 TL Depozito",
+    ],
   },
 ];

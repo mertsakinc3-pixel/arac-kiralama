@@ -7,6 +7,23 @@ import { Car } from "@/data/mockCars";
 import { IoMdClose, IoMdInformationCircleOutline } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import {
+  FaBluetoothB,
+  FaIdCard,
+  FaMoneyBillWave,
+  FaRoad,
+  FaUser,
+} from "react-icons/fa";
+import { FaSnowflake } from "react-icons/fa6";
+import { MdGpsFixed, MdElectricBolt, MdEventSeat } from "react-icons/md";
+import { RiRadarLine } from "react-icons/ri";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface CarCardProps {
   car: Car;
@@ -80,160 +97,238 @@ export function CarCard({
     setIsDragging(true);
   };
 
+
+  const getFeatureIcon = (feature: string) => {
+    const normalized = feature.toLowerCase();
+    if (normalized.includes("klima"))
+      return <FaSnowflake className="text-blue-600" />;
+    if (normalized.includes("bluetooth"))
+      return <FaBluetoothB className="text-blue-600" />;
+    if (normalized.includes("gps") || normalized.includes("navigasyon"))
+      return <MdGpsFixed className="text-blue-600" />;
+    if (normalized.includes("park"))
+      return <RiRadarLine className="text-blue-600" />;
+    if (normalized.includes("deri") || normalized.includes("koltuk"))
+      return <MdEventSeat className="text-blue-600" />;
+    if (normalized.includes("hibrit") || normalized.includes("elektrik"))
+      return <MdElectricBolt className="text-blue-600" />;
+    return <MdGpsFixed className="text-blue-600" />;
+  };
+
+  const getConditionIcon = (condition: string) => {
+    const normalized = condition.toLowerCase();
+    if (normalized.includes("ehliyet"))
+      return <FaIdCard className="text-emerald-600" />;
+    if (normalized.includes("km"))
+      return <FaRoad className="text-emerald-600" />;
+    if (normalized.includes("yaş"))
+      return <FaUser className="text-emerald-600" />;
+    if (normalized.includes("depozito") || normalized.includes("tl"))
+      return <FaMoneyBillWave className="text-emerald-600" />;
+    return <FaIdCard className="text-emerald-600" />;
+  };
+
   return (
-    <motion.div
-      className={`absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing ${
-        isTop ? "z-10" : "z-0"
-      }`}
-      style={{
-        x,
-        y,
-        rotate: isTop ? rotate : getBackCardRotation(),
-        opacity,
-      }}
-      drag={isTop}
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragElastic={0.2}
-      dragPropagation={false}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      initial={{ scale: 0.95, opacity: 0 }}
-      animate={{
-        scale: isTop ? 1 : Math.max(0.93, 0.97 - cardIndex * 0.02),
-        opacity: isTop ? 1 : Math.max(0.85, 0.98 - cardIndex * 0.05),
-        y: isTop ? 0 : 15 + cardIndex * 8,
-      }}
-      transition={{
-        duration: 0.3,
-        ease: "easeOut",
-      }}
-      exit={{
-        x:
-          exitDirection === "left" ? -300 : exitDirection === "right" ? 300 : 0,
-        opacity: 0,
-        scale: 0.8,
-        transition: { duration: 0.5 },
-      }}
-    >
-      <div className="relative w-full h-full bg-white rounded-2xl car-card-shadow overflow-hidden pointer-events-auto border border-gray-200 shadow-sm">
-        {/* Araç Resmi */}
-        <div className="relative h-7/12 w-full car-card-image pointer-events-none">
-          <Image
-            src={car.image}
-            alt={`${car.brand} ${car.model}`}
-            fill
-            className="object-cover"
-            priority={isTop}
-          />
+    <>
+      <motion.div
+        className={`absolute inset-0 w-full h-full px-12 cursor-grab active:cursor-grabbing ${
+          isTop ? "z-10" : "z-0"
+        }`}
+        style={{
+          x,
+          y,
+          rotate: isTop ? rotate : getBackCardRotation(),
+          opacity,
+        }}
+        drag={isTop}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        dragPropagation={false}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{
+          scale: isTop ? 1 : Math.max(0.93, 0.97 - cardIndex * 0.02),
+          opacity: isTop ? 1 : Math.max(0.85, 0.98 - cardIndex * 0.05),
+          y: isTop ? 0 : 15 + cardIndex * 8,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "easeOut",
+        }}
+        exit={{
+          x:
+            exitDirection === "left"
+              ? -300
+              : exitDirection === "right"
+              ? 300
+              : 0,
+          opacity: 0,
+          scale: 0.8,
+          transition: { duration: 0.5 },
+        }}
+      >
+        <div className="relative w-full h-full bg-white rounded-2xl car-card-shadow pointer-events-auto border border-gray-200 shadow-sm flex flex-col" style={{overflowY: 'hidden'}}>
+          {/* Araç Resmi */}
+          <div className="relative h-7/12 w-full car-card-image pointer-events-none">
+            <Image
+              src={car.image}
+              alt={`${car.brand} ${car.model}`}
+              fill
+              className="object-cover"
+              priority={isTop}
+            />
 
-          {/* Fiyat Etiketi */}
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
-            <span className="text-lg font-bold text-green-600">
-              ₺{car.price}/gün
-            </span>
-          </div>
 
-          {/* Yakıt Türü */}
-          <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-            <span className="text-white text-sm font-medium">
-              {car.fuelType}
-            </span>
-          </div>
+            {/* Yakıt Türü */}
+            <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+              <span className="text-white text-sm font-medium">
+                {car.fuelType}
+              </span>
+            </div>
 
-          {/* Swipe İndikatörleri */}
-          {isDragging && (
-            <>
-              <motion.div
-                className="absolute top-1/2 left-8 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg transform -rotate-12"
-                style={{ opacity: leftOpacity }}
-              >
-                REDDET
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 right-8 bg-green-500 text-white px-4 py-2 rounded-full font-bold text-lg transform rotate-12"
-                style={{ opacity: rightOpacity }}
-              >
-                BEĞEN
-              </motion.div>
-            </>
-          )}
-        </div>
-
-        {/* Araç Bilgileri */}
-        <div className="p-4 sm:p-6 h-1/3 flex flex-col justify-between car-card-content pointer-events-none">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">
-              {car.brand} {car.model}
-            </h2>
-            <p className="text-gray-600 mb-2">
-              {car.year} • {car.transmission}
-            </p>
-            <p className="text-sm text-gray-500 mb-3">
-              {car.location},{" "}
-              <span className="font-bold">{car.away}km uzakta </span>{" "}
-            </p>
-
-            {/* Özellikler */}
-            {/* <div className="flex flex-wrap gap-2 mb-3">
-              {car.features.slice(0, 3).map((feature, index) => (
-                <span
-                  key={index}
-                  className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
+            {/* Swipe İndikatörleri */}
+            {isDragging && (
+              <>
+                <motion.div
+                  className="absolute top-1/2 left-8 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg transform -rotate-12"
+                  style={{ opacity: leftOpacity }}
                 >
-                  {feature}
-                </span>
-              ))}
-              {car.features.length > 3 && (
-                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                  +{car.features.length - 3} daha
-                </span>
-              )}
-            </div> */}
+                  REDDET
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 right-8 bg-green-500 text-white px-4 py-2 rounded-full font-bold text-lg transform rotate-12"
+                  style={{ opacity: rightOpacity }}
+                >
+                  BEĞEN
+                </motion.div>
+              </>
+            )}
           </div>
 
-          {/* rejecter info favorite button */}
+          {/* Araç Bilgileri */}
+          <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between car-card-content pointer-events-none overflow-hidden" style={{overflow: 'hidden', maxHeight: '100%'}}>
+            <div>
+              <div className="flex items-start justify-between mb-1">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    {car.brand} {car.model}
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    {car.year} • {car.transmission}
+                  </p>
+                </div>
+                {/* Fiyat Etiketi */}
+                <div className="bg-blue-100 rounded-lg px-2 py-1.5 shadow-sm border border-blue-200">
+                  <div className="flex flex-col items-end space-y-0.5">
+                    <div className="flex items-center space-x-1">
+                      <span className="text-sm font-bold text-red-600">
+                        ₺{car.price}
+                      </span>
+                      <span className="text-xs text-black">/gün</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-xs font-semibold text-red-500">
+                        ₺{car.price * 7}
+                      </span>
+                      <span className="text-xs text-black">/hafta</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 mb-1">
+                {car.location},{" "}
+                <span className="font-bold">{car.away}km uzakta </span>{" "}
+              </p>
+            </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2 pointer-events-auto justify-between w-full">
-              <button
-                onClick={onReject}
-                className="w-14 h-14 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              >
-                <span className="text-red-500 text-2xl">
-                  <IoMdClose />
-                </span>
-              </button>
+            {/* rejecter info favorite button */}
 
-              <button className="w-14 h-14 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center transition-colors cursor-pointer">
-                <span className="text-blue-500 text-2xl">
-                  <IoMdInformationCircleOutline />
-                </span>
-              </button>
+            <div className="flex items-center justify-between">
+              <div className="flex gap-2 pointer-events-auto justify-between w-full">
+                <button
+                  onClick={onReject}
+                  className="w-14 h-14 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <span className="text-red-500 text-2xl">
+                    <IoMdClose />
+                  </span>
+                </button>
 
-              <button
-                onClick={onLike}
-                className="w-14 h-14 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              >
-                <span className="text-green-500 text-2xl">
-                  <FaHeart />
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="w-14 h-14 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center transition-colors cursor-pointer">
+                      <span className="text-blue-500 text-2xl">
+                        <IoMdInformationCircleOutline />
+                      </span>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Araç Özellikleri</DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-3">
+                      <ul className="mt-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {car.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50">
+                              {getFeatureIcon(feature)}
+                            </span>
+                            <span className="text-gray-800 leading-6">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <DialogTitle className="mt-6">
+                      Kiralama Koşulları
+                    </DialogTitle>
+                    <div className="mt-3">
+                      <ul className="mt-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {car.rentalConditions.map(
+                          (rentalCondition, index) => (
+                            <li
+                              key={index}
+                              className="flex items-start gap-3"
+                            >
+                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50">
+                                {getConditionIcon(rentalCondition)}
+                              </span>
+                              <span className="text-gray-800 leading-6">
+                                {rentalCondition}
+                              </span>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <button
+                  onClick={onLike}
+                  className="w-14 h-14 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <span className="text-green-500 text-2xl">
+                    <FaHeart />
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <button className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between">
+                <span className="text-white font-bold text-lg">
+                  HEMEN KİRALA
                 </span>
+                <MdKeyboardArrowRight className="text-white text-2xl" />
               </button>
             </div>
           </div>
-
-          <div>
-            <button className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-3 font-bold flex items-center justify-end">
-              <span className="text-white text-end whitespace-nowrap  w-3/4 ">
-                HEMEN KİRALA{" "}
-              </span>
-
-              <span className="w-1/4 flex items-center justify-end">
-                <MdKeyboardArrowRight className="text-white text-2xl " />
-              </span>
-            </button>
-          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }

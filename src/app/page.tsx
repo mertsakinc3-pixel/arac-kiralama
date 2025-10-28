@@ -9,7 +9,7 @@ export default function Home() {
   const headerRef = useRef<HeaderRef>(null);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start h-full">
+    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden">
       <Header 
         ref={headerRef}
         onFilterClick={() => setIsFilterOpen(true)}

@@ -9,6 +9,8 @@ import { IoWarningOutline } from "react-icons/io5";
 import { IoMailOutline } from "react-icons/io5";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
+import { IoLogInOutline } from "react-icons/io5";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -90,16 +92,26 @@ const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
                 })}
               </ul>
 
-              {/* Logout */}
+              {/* Auth Buttons */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 }}
-                className="mt-6 pt-6 border-t border-gray-200"
+                className="mt-6 pt-6 border-t border-gray-200 space-y-2"
               >
                 <button className="flex items-center gap-4 p-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full">
                   <IoLogOutOutline className="text-2xl" />
                   <span className="font-medium">Çıkış Yap</span>
+                </button>
+                
+                <button className="flex items-center gap-4 p-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors w-full">
+                  <IoLogInOutline className="text-2xl" />
+                  <span className="font-medium">Giriş Yap</span>
+                </button>
+                
+                <button className="flex items-center gap-4 p-3 text-green-600 hover:bg-green-50 rounded-lg transition-colors w-full">
+                  <IoPersonAddOutline className="text-2xl" />
+                  <span className="font-medium">Kayıt Ol</span>
                 </button>
               </motion.div>
             </nav>
