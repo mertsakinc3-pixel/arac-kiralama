@@ -157,3 +157,233 @@
   }
 }
 
+/* Özel Animasyonlar */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+/* Loading Screen Animasyonları */
+@keyframes orbit-1 {
+  0% {
+    transform: translate(-50%, 0) rotate(0deg) translateX(160px) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, 0) rotate(360deg) translateX(160px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-2 {
+  0% {
+    transform: rotate(45deg) translateX(160px) rotate(-45deg);
+  }
+  100% {
+    transform: rotate(405deg) translateX(160px) rotate(-405deg);
+  }
+}
+
+@keyframes orbit-3 {
+  0% {
+    transform: translateY(-50%) rotate(90deg) translateX(160px) rotate(-90deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(450deg) translateX(160px) rotate(-450deg);
+  }
+}
+
+@keyframes orbit-4 {
+  0% {
+    transform: rotate(135deg) translateX(160px) rotate(-135deg);
+  }
+  100% {
+    transform: rotate(495deg) translateX(160px) rotate(-495deg);
+  }
+}
+
+@keyframes orbit-5 {
+  0% {
+    transform: translate(-50%, 0) rotate(180deg) translateX(160px) rotate(-180deg);
+  }
+  100% {
+    transform: translate(-50%, 0) rotate(540deg) translateX(160px) rotate(-540deg);
+  }
+}
+
+@keyframes orbit-6 {
+  0% {
+    transform: rotate(225deg) translateX(160px) rotate(-225deg);
+  }
+  100% {
+    transform: rotate(585deg) translateX(160px) rotate(-585deg);
+  }
+}
+
+@keyframes orbit-7 {
+  0% {
+    transform: translateY(-50%) rotate(270deg) translateX(160px) rotate(-270deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(630deg) translateX(160px) rotate(-630deg);
+  }
+}
+
+@keyframes orbit-8 {
+  0% {
+    transform: rotate(315deg) translateX(160px) rotate(-315deg);
+  }
+  100% {
+    transform: rotate(675deg) translateX(160px) rotate(-675deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-orbit-1 {
+  animation: orbit-1 8s linear infinite;
+}
+
+.animate-orbit-2 {
+  animation: orbit-2 8s linear infinite;
+}
+
+.animate-orbit-3 {
+  animation: orbit-3 8s linear infinite;
+}
+
+.animate-orbit-4 {
+  animation: orbit-4 8s linear infinite;
+}
+
+.animate-orbit-5 {
+  animation: orbit-5 8s linear infinite;
+}
+
+.animate-orbit-6 {
+  animation: orbit-6 8s linear infinite;
+}
+
+.animate-orbit-7 {
+  animation: orbit-7 8s linear infinite;
+}
+
+.animate-orbit-8 {
+  animation: orbit-8 8s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animation-delay-600 {
+  animation-delay: 0.6s;
+}
+
+/* Kurumsal Loading Animasyonları */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.animate-progress {
+  animation: progress 1.5s ease-in-out infinite;
+}
+

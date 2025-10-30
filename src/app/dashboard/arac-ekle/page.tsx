@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IoArrowBack, IoCloudUpload, IoQrCode } from "react-icons/io5";
+import { IoArrowBack, IoCloudUpload, IoQrCode, IoWarning } from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -11,8 +11,16 @@ const QRCodeScanner = dynamic(() => import("@/components/QRCodeScanner"), {
   ssr: false,
 });
 
+// Mock paket bilgisi - backend hazır olunca API'den gelecek
+const mockPackageInfo = {
+  totalSlots: 5,
+  usedSlots: 3,
+  availableSlots: 2,
+};
+
 export default function AracEklePage() {
   const router = useRouter();
+  const [packageInfo, setPackageInfo] = useState(mockPackageInfo);
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
@@ -39,40 +47,44 @@ export default function AracEklePage() {
       registrationDate: "",
       ownerName: "",
       ownerTC: "",
-    }
+    },
   });
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [newFeature, setNewFeature] = useState("");
   const [showQRScanner, setShowQRScanner] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleConditionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       rentalConditions: {
         ...prev.rentalConditions,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
 
   const handleRegistrationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       registrationInfo: {
         ...prev.registrationInfo,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
 
@@ -82,20 +94,22 @@ export default function AracEklePage() {
       // Gerçek ruhsat QR kodu formatına göre parse edilmeli
       // Şimdilik JSON formatında olduğunu varsayıyoruz
       const parsedData = JSON.parse(data);
-      
-      setFormData(prev => ({
+
+      setFormData((prev) => ({
         ...prev,
         registrationInfo: {
           plateNumber: parsedData.plateNumber || parsedData.plaka || "",
-          registrationNumber: parsedData.registrationNumber || parsedData.ruhsatNo || "",
+          registrationNumber:
+            parsedData.registrationNumber || parsedData.ruhsatNo || "",
           chassisNumber: parsedData.chassisNumber || parsedData.sasiNo || "",
           engineNumber: parsedData.engineNumber || parsedData.motorNo || "",
-          registrationDate: parsedData.registrationDate || parsedData.tescilTarihi || "",
+          registrationDate:
+            parsedData.registrationDate || parsedData.tescilTarihi || "",
           ownerName: parsedData.ownerName || parsedData.sahipAdi || "",
           ownerTC: parsedData.ownerTC || parsedData.tcNo || "",
-        }
+        },
       }));
-      
+
       setShowQRScanner(false);
       alert("Ruhsat bilgileri başarıyla okundu!");
     } catch (error) {
@@ -106,40 +120,37 @@ export default function AracEklePage() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const addFeature = () => {
     if (newFeature.trim() && !formData.features.includes(newFeature.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        features: [...prev.features, newFeature.trim()]
+        features: [...prev.features, newFeature.trim()],
       }));
       setNewFeature("");
     }
   };
 
   const removeFeature = (feature: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      features: prev.features.filter(f => f !== feature)
+      features: prev.features.filter((f) => f !== feature),
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Paket kontrolü
+    if (packageInfo.availableSlots <= 0) {
+      alert("❌ Boş slot kalmadı!\n\nYeni araç eklemek için paket satın almanız gerekiyor.");
+      router.push("/dashboard/paket-sec");
+      return;
+    }
+    
     // Backend hazır olunca burası API'ye gönderilecek
     console.log("Araç Bilgileri:", formData);
     console.log("Görsel:", selectedImage);
-    
+
     // Başarılı mesajı göster ve dashboard'a yönlendir
     alert("Araç başarıyla eklendi!");
     router.push("/dashboard");
@@ -158,40 +169,69 @@ export default function AracEklePage() {
           <h1 className="text-3xl font-bold text-gray-800">Yeni Araç Ekle</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
-          {/* Araç Görseli */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Araç Görseli
-            </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
-              {selectedImage ? (
-                <div className="relative">
-                  <img src={selectedImage} alt="Preview" className="max-h-64 mx-auto rounded-lg" />
-                  <button
-                    type="button"
-                    onClick={() => setSelectedImage(null)}
-                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                  >
-                    Görseli Kaldır
+        {/* Paket Bilgisi Uyarısı */}
+        {packageInfo.availableSlots <= 0 ? (
+          <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 mb-6">
+            <div className="flex items-start gap-4">
+              <IoWarning className="text-red-500 shrink-0 mt-1" size={32} />
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-red-800 mb-2">
+                  ❌ Boş Slot Kalmadı!
+                </h3>
+                <p className="text-red-700 mb-4">
+                  Tüm araç slotlarınız dolu. Yeni araç eklemek için paket satın almanız gerekiyor.
+                </p>
+                <Link href="/dashboard/paket-sec">
+                  <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                    Paket Satın Al
                   </button>
-                </div>
-              ) : (
-                <label className="cursor-pointer">
-                  <IoCloudUpload className="mx-auto text-gray-400 mb-2" size={48} />
-                  <p className="text-gray-600 mb-2">Görsel yüklemek için tıklayın</p>
-                  <p className="text-sm text-gray-400">PNG, JPG veya JPEG (Max. 5MB)</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
-              )}
+                </Link>
+              </div>
             </div>
           </div>
+        ) : (
+          <div className={`rounded-xl p-4 mb-6 border-2 ${
+            packageInfo.availableSlots <= 1
+              ? "bg-orange-50 border-orange-500"
+              : "bg-blue-50 border-blue-500"
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {packageInfo.availableSlots <= 1 ? (
+                  <IoWarning className="text-orange-500" size={24} />
+                ) : (
+                  <IoCloudUpload className="text-blue-500" size={24} />
+                )}
+                <div>
+                  <p className={`font-bold ${
+                    packageInfo.availableSlots <= 1 ? "text-orange-800" : "text-blue-800"
+                  }`}>
+                    {packageInfo.availableSlots} Boş Slot Kaldı
+                  </p>
+                  <p className={`text-sm ${
+                    packageInfo.availableSlots <= 1 ? "text-orange-600" : "text-blue-600"
+                  }`}>
+                    {packageInfo.usedSlots} / {packageInfo.totalSlots} slot kullanımda
+                  </p>
+                </div>
+              </div>
+              <Link href="/dashboard/paket-sec">
+                <button className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                  packageInfo.availableSlots <= 1
+                    ? "bg-orange-500 hover:bg-orange-600 text-white"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                }`}>
+                  Daha Fazla Slot Al
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
 
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-lg shadow-md p-6"
+        >
           {/* Temel Bilgiler */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
@@ -357,7 +397,9 @@ export default function AracEklePage() {
           {/* Ruhsat Bilgileri */}
           <div className="mb-6 border-t pt-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">📋 Ruhsat Bilgileri</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                📋 Ruhsat Bilgileri
+              </h3>
               <button
                 type="button"
                 onClick={() => setShowQRScanner(true)}
@@ -478,7 +520,9 @@ export default function AracEklePage() {
 
           {/* Kiralama Koşulları */}
           <div className="mb-6 border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Kiralama Koşulları</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Kiralama Koşulları
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -540,7 +584,9 @@ export default function AracEklePage() {
                 type="text"
                 value={newFeature}
                 onChange={(e) => setNewFeature(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addFeature())
+                }
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Örn: Klima, Bluetooth, GPS"
               />
@@ -617,4 +663,3 @@ export default function AracEklePage() {
     </div>
   );
 }
-

@@ -57,7 +57,7 @@ const AboutPage = () => {
             transition={{ delay: 0.3 }}
             className="text-xl text-center max-w-3xl mx-auto text-blue-100"
           >
-            Türkiye'nin en güvenilir araç kiralama platformu olarak, size en iyi hizmeti sunmak için çalışıyoruz.
+            Türkiye&apos;nin en güvenilir araç kiralama platformu olarak, size en iyi hizmeti sunmak için çalışıyoruz.
           </motion.p>
         </div>
       </motion.section>
@@ -74,7 +74,7 @@ const AboutPage = () => {
             <h2 className="text-3xl font-bold mb-6 text-gray-900">Hikayemiz</h2>
             <p className="text-gray-600 mb-4 leading-relaxed">
               2009 yılında kurulan şirketimiz, araç kiralama sektöründe müşteri memnuniyetini ön planda tutan 
-              yaklaşımıyla hızla büyüdü. Bugün Türkiye'nin dört bir yanında hizmet veren, 500'den fazla araçlık 
+              yaklaşımıyla hızla büyüdü. Bugün Türkiye&apos;nin dört bir yanında hizmet veren, 500&apos;den fazla araçlık 
               filosuyla sektörün önde gelen firmalarından biri haline geldik.
             </p>
             <p className="text-gray-600 mb-4 leading-relaxed">

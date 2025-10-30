@@ -23,6 +23,7 @@ const CardSwipeContainer = ({
     // LocalStorage'dan favorileri yükle
     const savedFavorites = localStorage.getItem("favorites");
     if (savedFavorites) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFavorites(JSON.parse(savedFavorites));
     }
   }, []);
@@ -74,7 +75,7 @@ const CardSwipeContainer = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto  pb-8 pt-4 scroll-smooth">
+    <div className="w-full pb-8 pt-4 scroll-smooth">
       {/* Filter Panel */}
       <div className="mb-4">
         <FilterPanel
@@ -88,100 +89,96 @@ const CardSwipeContainer = ({
 
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
           Araçlarını Keşfet
         </h2>
-        <p className="text-sm sm:text-base text-gray-600">
+        <p className="text-sm sm:text-base lg:text-lg text-gray-600">
           Beğendiğin araçları sağa, beğenmediklerini sola kaydır
         </p>
       </div>
 
-      {/* Kartlar Container */}
-      <div className="relative w-full car-card-container" style={{ minHeight: '650px' }}>
-        <AnimatePresence>
-          {currentCar && (
-            <CarCard
-              key={currentCar.id}
-              car={currentCar}
-              onSwipe={handleSwipe}
-              onReject={handleReject}
-              onFavorite={handleFavoriteToggle}
-              isFavorite={favorites.includes(currentCar.id)}
-              isTop={true}
-              cardIndex={0}
-            />
-          )}
-        </AnimatePresence>
+      {/* Desktop ve Mobile Layout */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+        {/* Kartlar Container - Sol taraf (Desktop'ta) */}
+        <div className="w-full lg:w-1/2 lg:sticky lg:top-4">
+          <div className="relative w-full max-w-md mx-auto lg:max-w-none car-card-container" style={{ minHeight: '650px' }}>
+            <AnimatePresence>
+              {currentCar && (
+                <CarCard
+                  key={currentCar.id}
+                  car={currentCar}
+                  onSwipe={handleSwipe}
+                  onReject={handleReject}
+                  onFavorite={handleFavoriteToggle}
+                  isFavorite={favorites.includes(currentCar.id)}
+                  isTop={true}
+                  cardIndex={0}
+                />
+              )}
+            </AnimatePresence>
 
-        {cars.map((car, index) => {
-          if (index <= currentIndex) return null;
+            {cars.map((car, index) => {
+              if (index <= currentIndex) return null;
 
-          // En fazla 3 arka kart göster
-          const stackPosition = index - currentIndex - 1;
-          if (stackPosition > 3) return null;
+              // En fazla 3 arka kart göster
+              const stackPosition = index - currentIndex - 1;
+              if (stackPosition > 3) return null;
 
-          return (
-            <CarCard
-              key={car.id}
-              car={car}
-              onSwipe={handleSwipe}
-              onReject={handleReject}
-              isTop={false}
-              cardIndex={stackPosition}
-            />
-          );
-        })}
+              return (
+                <CarCard
+                  key={car.id}
+                  car={car}
+                  onSwipe={handleSwipe}
+                  onReject={handleReject}
+                  isTop={false}
+                  cardIndex={stackPosition}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Harita Container - Sağ taraf (Desktop'ta) */}
+        {currentCar && (
+          <motion.div
+            key={currentCar.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="w-full lg:w-1/2 mt-8 lg:mt-0"
+          >
+            <div className="h-64 sm:h-80 lg:h-[650px] w-full overflow-hidden rounded-xl border border-gray-200 shadow-lg">
+              <iframe
+                src={`https://www.google.com/maps?q=${encodeURIComponent(
+                  currentCar.location
+                )}&output=embed`}
+                className="h-full w-full border-0"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                style={{
+                  scrollBehavior: "auto",
+                  overscrollBehavior: "contain",
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-between mt-3 text-sm sm:text-base text-gray-600 px-1">
+              <span className="truncate font-medium">{currentCar.location}</span>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  currentCar.location
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline font-medium whitespace-nowrap ml-2"
+              >
+                Haritada aç →
+              </a>
+            </div>
+          </motion.div>
+        )}
       </div>
-
-      {/* İstatistikler */}
-      {/* <div className="mt-6 flex justify-center gap-4 text-sm text-gray-600">
-        <span className="text-green-600">Beğenilen: {likedCars.length}</span>
-        <span className="text-red-600">Reddedilen: {rejectedCars.length}</span>
-        <span className="text-blue-600">
-          Kalan: {cars.length - currentIndex}
-        </span>
-      </div> */}
-
-      {/* Harita Container - Sadece en üstteki kart için */}
-      {currentCar && (
-        <motion.div
-          key={currentCar.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          className="w-full mt-16 px-4"
-        >
-          <div className="h-52 w-full overflow-hidden rounded-xl border border-gray-200">
-            <iframe
-              src={`https://www.google.com/maps?q=${encodeURIComponent(
-                currentCar.location
-              )}&output=embed`}
-              className="h-full w-full border-0"
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              style={{
-                scrollBehavior: "auto",
-                overscrollBehavior: "contain",
-              }}
-            />
-          </div>
-          <div className="flex items-center justify-between mt-2 text-sm text-gray-600 px-1">
-            <span className="truncate">{currentCar.location}</span>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                currentCar.location
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              Haritada aç
-            </a>
-          </div>
-        </motion.div>
-      )}
 
     </div>
   );
