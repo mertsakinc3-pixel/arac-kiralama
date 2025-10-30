@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { IoMenu, IoFilter } from "react-icons/io5";
 import SideMenu from "./SideMenu";
 import { useFilter } from "@/contexts/FilterContext";
+import Link from "next/link";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,7 +33,9 @@ const Header = () => {
         {/* Middle company logo */}
 
         <div>
-          <h1 className="text-2xl font-bold">KiralamaYeri</h1>
+          <Link href="/" className="flex items-center">
+            <h1 className="text-2xl font-bold">KiralamaYeri</h1>
+          </Link>
         </div>
 
         {/* Right filter menu - sadece arac-kirala sayfasında görünür */}

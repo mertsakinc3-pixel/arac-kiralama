@@ -28,18 +28,20 @@ import {
 interface CarCardProps {
   car: Car;
   onSwipe: (direction: "left" | "right") => void;
-  onLike: () => void;
-  onReject: () => void;
-  isTop: boolean;
+  onReject?: () => void;
+  onFavorite?: () => void;
+  isFavorite?: boolean;
+  isTop?: boolean;
   cardIndex?: number;
 }
 
 export function CarCard({
   car,
   onSwipe,
-  onLike,
   onReject,
-  isTop,
+  onFavorite,
+  isFavorite = false,
+  isTop = true,
   cardIndex = 0,
 }: CarCardProps) {
   const [isDragging, setIsDragging] = useState(false);
@@ -202,10 +204,10 @@ export function CarCard({
                   REDDET
                 </motion.div>
                 <motion.div
-                  className="absolute top-1/2 right-8 bg-green-500 text-white px-4 py-2 rounded-full font-bold text-lg transform rotate-12"
+                  className="absolute top-1/2 right-8 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg transform rotate-12"
                   style={{ opacity: rightOpacity }}
                 >
-                  BEĞEN
+                  FAVORİ
                 </motion.div>
               </>
             )}
@@ -247,14 +249,16 @@ export function CarCard({
             {/* rejecter info favorite button */}
             <div className="flex items-center justify-between">
               <div className="flex gap-2 pointer-events-auto justify-between w-full">
-                <button
-                  onClick={onReject}
-                  className="w-12 h-12 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <span className="text-red-500 text-xl">
-                    <IoMdClose />
-                  </span>
-                </button>
+                {onReject && (
+                  <button
+                    onClick={onReject}
+                    className="w-12 h-12 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <span className="text-red-500 text-xl">
+                      <IoMdClose />
+                    </span>
+                  </button>
+                )}
 
                 <Dialog>
                   <DialogTrigger asChild>
@@ -303,14 +307,22 @@ export function CarCard({
                   </DialogContent>
                 </Dialog>
 
-                <button
-                  onClick={onLike}
-                  className="w-12 h-12 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <span className="text-green-500 text-xl">
-                    <FaHeart />
-                  </span>
-                </button>
+                {onFavorite && (
+                  <button
+                    onClick={onFavorite}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                      isFavorite
+                        ? "bg-red-100 hover:bg-red-200"
+                        : "bg-green-100 hover:bg-green-200"
+                    }`}
+                  >
+                    <FaHeart
+                      className={`text-xl ${
+                        isFavorite ? "text-red-500" : "text-green-500"
+                      }`}
+                    />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -328,3 +340,5 @@ export function CarCard({
     </>
   );
 }
+
+export default CarCard;

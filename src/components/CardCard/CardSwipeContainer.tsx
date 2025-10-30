@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { mockCars, Car } from "@/data/mockCars";
 import { CarCard } from "./CarCard";
@@ -17,17 +17,28 @@ const CardSwipeContainer = ({
   const [allCars] = useState<Car[]>(mockCars);
   const [cars, setCars] = useState<Car[]>(mockCars);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
-  const handleSwipe = () => {
-    // Swipe işlemi sırasında sadece state'i güncelle, index'i değiştirme
+  useEffect(() => {
+    // LocalStorage'dan favorileri yükle
+    const savedFavorites = localStorage.getItem("favorites");
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+  }, []);
+
+  const handleSwipe = (direction: "left" | "right") => {
+    // Sağa swipe - favorilere ekle
+    if (direction === "right") {
+      const currentCar = cars[currentIndex];
+      if (currentCar && !favorites.includes(currentCar.id)) {
+        const updatedFavorites = [...favorites, currentCar.id];
+        setFavorites(updatedFavorites);
+        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      }
+    }
+    
     // Swipe animasyonu tamamlandıktan sonra index'i artır
-    setTimeout(() => {
-      setCurrentIndex((prev) => prev + 1);
-    }, 300);
-  };
-
-  const handleLike = () => {
-    // Beğenme işlemi sonrası kartı değiştir
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
     }, 300);
@@ -38,6 +49,21 @@ const CardSwipeContainer = ({
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
     }, 300);
+  };
+
+  const handleFavoriteToggle = () => {
+    const currentCar = cars[currentIndex];
+    if (!currentCar) return;
+
+    if (favorites.includes(currentCar.id)) {
+      const updatedFavorites = favorites.filter((id) => id !== currentCar.id);
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    } else {
+      const updatedFavorites = [...favorites, currentCar.id];
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    }
   };
 
   const currentCar = cars[currentIndex];
@@ -78,8 +104,9 @@ const CardSwipeContainer = ({
               key={currentCar.id}
               car={currentCar}
               onSwipe={handleSwipe}
-              onLike={handleLike}
               onReject={handleReject}
+              onFavorite={handleFavoriteToggle}
+              isFavorite={favorites.includes(currentCar.id)}
               isTop={true}
               cardIndex={0}
             />
@@ -98,7 +125,6 @@ const CardSwipeContainer = ({
               key={car.id}
               car={car}
               onSwipe={handleSwipe}
-              onLike={handleLike}
               onReject={handleReject}
               isTop={false}
               cardIndex={stackPosition}

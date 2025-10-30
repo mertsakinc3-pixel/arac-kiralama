@@ -7,7 +7,7 @@ export default function AracKirala() {
   const { isFilterOpen, setIsFilterOpen } = useFilter();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden pb-20 md:pb-0">
       <CardSwipeContainer 
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
