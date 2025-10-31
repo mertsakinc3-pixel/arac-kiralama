@@ -1,8 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { IoArrowBack, IoCar, IoTrash, IoCreate, IoEye, IoCheckmarkCircle, IoCloseCircle, IoShareSocial } from "react-icons/io5";
-import { FaWhatsapp, FaFacebook, FaInstagram, FaTiktok, FaTwitter, FaLinkedin, FaCopy } from "react-icons/fa";
+import {
+  IoArrowBack,
+  IoCar,
+  IoTrash,
+  IoCreate,
+  IoEye,
+  IoCheckmarkCircle,
+  IoCloseCircle,
+  IoShareSocial,
+} from "react-icons/io5";
+import {
+  FaWhatsapp,
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+  FaTwitter,
+  FaLinkedin,
+  FaCopy,
+} from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { mockCars, Car } from "@/data/mockCars";
@@ -14,34 +31,37 @@ interface CarWithPublish extends Car {
 
 export default function AracListesiPage() {
   const [cars, setCars] = useState<CarWithPublish[]>(
-    mockCars.map(car => ({ ...car, isPublished: true }))
+    mockCars.map((car) => ({ ...car, isPublished: true }))
   );
   const [selectedCar, setSelectedCar] = useState<CarWithPublish | null>(null);
-  const [shareModalCar, setShareModalCar] = useState<CarWithPublish | null>(null);
+  const [shareModalCar, setShareModalCar] = useState<CarWithPublish | null>(
+    null
+  );
   const [copySuccess, setCopySuccess] = useState(false);
 
   const handleDelete = (carId: string) => {
     if (confirm("Bu aracı silmek istediğinizden emin misiniz?")) {
-      setCars(prev => prev.filter(car => car.id !== carId));
+      setCars((prev) => prev.filter((car) => car.id !== carId));
       alert("Araç başarıyla silindi!");
     }
   };
 
   const handlePublishToggle = (carId: string) => {
-    setCars(prev =>
-      prev.map(car =>
+    setCars((prev) =>
+      prev.map((car) =>
         car.id === carId ? { ...car, isPublished: !car.isPublished } : car
       )
     );
-    const car = cars.find(c => c.id === carId);
+    const car = cars.find((c) => c.id === carId);
     if (car) {
-      alert(car.isPublished ? "Araç yayından kaldırıldı!" : "Araç yayına alındı!");
+      alert(
+        car.isPublished ? "Araç yayından kaldırıldı!" : "Araç yayına alındı!"
+      );
     }
   };
 
   const getCarShareUrl = (car: CarWithPublish) => {
-    // Gerçek uygulamada bu dinamik olacak
-    return `${window.location.origin}/arac-kirala?id=${car.id}`;
+    return `${window.location.origin}/arac/${car.id}`;
   };
 
   const getCarShareText = (car: CarWithPublish) => {
@@ -51,34 +71,58 @@ export default function AracListesiPage() {
   const handleShare = (platform: string, car: CarWithPublish) => {
     const url = getCarShareUrl(car);
     const text = getCarShareText(car);
-    
+
     let shareUrl = "";
-    
+
     switch (platform) {
       case "whatsapp":
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+        // WhatsApp için detaylı mesaj oluştur
+        const whatsappMessage = `
+🚗 *${car.brand} ${car.model}*
+📅 Yıl: ${car.year}
+⚡ Yakıt: ${car.fuelType}
+⚙️ Vites: ${car.transmission}
+👥 Koltuk: ${car.seats} Kişi
+📍 Konum: ${car.location}
+💰 *Günlük ${car.price} TL*
+${car.description}
+
+🔗 Detaylı bilgi ve rezervasyon için:
+${url}
+        `.trim();
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
         break;
       case "facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          url
+        )}`;
         break;
       case "twitter":
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          text
+        )}&url=${encodeURIComponent(url)}`;
         break;
       case "linkedin":
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          url
+        )}`;
         break;
       case "instagram":
         // Instagram web'den doğrudan paylaşım desteklemiyor, kullanıcıyı bilgilendir
-        alert("Instagram'da paylaşmak için linki kopyalayıp Instagram uygulamasında paylaşabilirsiniz.");
+        alert(
+          "Instagram'da paylaşmak için linki kopyalayıp Instagram uygulamasında paylaşabilirsiniz."
+        );
         handleCopyLink(car);
         return;
       case "tiktok":
         // TikTok web'den doğrudan paylaşım desteklemiyor
-        alert("TikTok'ta paylaşmak için linki kopyalayıp TikTok uygulamasında paylaşabilirsiniz.");
+        alert(
+          "TikTok'ta paylaşmak için linki kopyalayıp TikTok uygulamasında paylaşabilirsiniz."
+        );
         handleCopyLink(car);
         return;
     }
-    
+
     if (shareUrl) {
       window.open(shareUrl, "_blank", "width=600,height=400");
     }
@@ -122,25 +166,28 @@ export default function AracListesiPage() {
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-sm text-gray-500 mb-1">Yayında</p>
             <p className="text-2xl font-bold text-green-600">
-              {cars.filter(car => car.isPublished).length}
+              {cars.filter((car) => car.isPublished).length}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-sm text-gray-500 mb-1">Yayında Değil</p>
             <p className="text-2xl font-bold text-red-600">
-              {cars.filter(car => !car.isPublished).length}
+              {cars.filter((car) => !car.isPublished).length}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-sm text-gray-500 mb-1">Kirada</p>
             <p className="text-2xl font-bold text-yellow-600">
-              {cars.filter(car => !car.availability).length}
+              {cars.filter((car) => !car.availability).length}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-sm text-gray-500 mb-1">Ortalama Fiyat</p>
             <p className="text-2xl font-bold text-blue-600">
-              {Math.round(cars.reduce((acc, car) => acc + car.price, 0) / cars.length)} TL
+              {Math.round(
+                cars.reduce((acc, car) => acc + car.price, 0) / cars.length
+              )}{" "}
+              TL
             </p>
           </div>
         </div>
@@ -184,7 +231,7 @@ export default function AracListesiPage() {
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
                   {car.brand} {car.model}
                 </h3>
-                
+
                 <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
                   <div>
                     <span className="font-medium">Yıl:</span> {car.year}
@@ -193,7 +240,8 @@ export default function AracListesiPage() {
                     <span className="font-medium">Yakıt:</span> {car.fuelType}
                   </div>
                   <div>
-                    <span className="font-medium">Vites:</span> {car.transmission}
+                    <span className="font-medium">Vites:</span>{" "}
+                    {car.transmission}
                   </div>
                   <div>
                     <span className="font-medium">Koltuk:</span> {car.seats}
@@ -203,11 +251,15 @@ export default function AracListesiPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm text-gray-500">Günlük Fiyat</p>
-                    <p className="text-2xl font-bold text-blue-600">{car.price} TL</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {car.price} TL
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <span className="text-yellow-500 mr-1">★</span>
-                    <span className="font-semibold text-gray-700">{car.rating}</span>
+                    <span className="font-semibold text-gray-700">
+                      {car.rating}
+                    </span>
                   </div>
                 </div>
 
@@ -229,7 +281,9 @@ export default function AracListesiPage() {
                       <IoShareSocial size={16} />
                     </button>
                     <button
-                      onClick={() => alert("Düzenleme özelliği yakında eklenecek!")}
+                      onClick={() =>
+                        alert("Düzenleme özelliği yakında eklenecek!")
+                      }
                       className="flex items-center justify-center gap-1 px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
                     >
                       <IoCreate size={16} />
@@ -241,7 +295,7 @@ export default function AracListesiPage() {
                       <IoTrash size={16} />
                     </button>
                   </div>
-                  
+
                   {/* Yayına Al/Kaldır Butonu */}
                   {car.isPublished ? (
                     <button
@@ -308,7 +362,7 @@ export default function AracListesiPage() {
                   <p className="text-sm text-gray-600 font-medium mb-3">
                     Sosyal medyada paylaş:
                   </p>
-                  
+
                   {/* WhatsApp */}
                   <button
                     onClick={() => handleShare("whatsapp", shareModalCar)}
@@ -348,10 +402,12 @@ export default function AracListesiPage() {
                   {/* Instagram */}
                   <button
                     onClick={() => handleShare("instagram", shareModalCar)}
-                    className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-linear-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors"
                   >
                     <FaInstagram size={24} />
-                    <span className="font-medium">Instagram&apos;da Paylaş</span>
+                    <span className="font-medium">
+                      Instagram&apos;da Paylaş
+                    </span>
                   </button>
 
                   {/* TikTok */}
@@ -412,20 +468,38 @@ export default function AracListesiPage() {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-2">Temel Bilgiler</h3>
+                    <h3 className="font-semibold text-gray-700 mb-2">
+                      Temel Bilgiler
+                    </h3>
                     <p className="text-gray-600">Yıl: {selectedCar.year}</p>
-                    <p className="text-gray-600">Yakıt: {selectedCar.fuelType}</p>
-                    <p className="text-gray-600">Vites: {selectedCar.transmission}</p>
+                    <p className="text-gray-600">
+                      Yakıt: {selectedCar.fuelType}
+                    </p>
+                    <p className="text-gray-600">
+                      Vites: {selectedCar.transmission}
+                    </p>
                     <p className="text-gray-600">Koltuk: {selectedCar.seats}</p>
-                    <p className="text-gray-600">Konum: {selectedCar.location}</p>
+                    <p className="text-gray-600">
+                      Konum: {selectedCar.location}
+                    </p>
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-gray-700 mb-2">Fiyatlandırma</h3>
-                    <p className="text-gray-600">Günlük: {selectedCar.price} TL</p>
-                    <p className="text-gray-600">Depozito: {selectedCar.deposit} TL</p>
-                    <p className="text-gray-600">Teslim: {selectedCar.deliveryType}</p>
-                    <p className="text-gray-600">Puan: ★ {selectedCar.rating}</p>
+                    <h3 className="font-semibold text-gray-700 mb-2">
+                      Fiyatlandırma
+                    </h3>
+                    <p className="text-gray-600">
+                      Günlük: {selectedCar.price} TL
+                    </p>
+                    <p className="text-gray-600">
+                      Depozito: {selectedCar.deposit} TL
+                    </p>
+                    <p className="text-gray-600">
+                      Teslim: {selectedCar.deliveryType}
+                    </p>
+                    <p className="text-gray-600">
+                      Puan: ★ {selectedCar.rating}
+                    </p>
                   </div>
                 </div>
 
@@ -435,7 +509,9 @@ export default function AracListesiPage() {
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Özellikler</h3>
+                  <h3 className="font-semibold text-gray-700 mb-2">
+                    Özellikler
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedCar.features.map((feature, index) => (
                       <span
@@ -449,7 +525,9 @@ export default function AracListesiPage() {
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Kiralama Koşulları</h3>
+                  <h3 className="font-semibold text-gray-700 mb-2">
+                    Kiralama Koşulları
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedCar.rentalConditions.map((condition, index) => (
                       <span
@@ -487,4 +565,3 @@ export default function AracListesiPage() {
     </div>
   );
 }
-

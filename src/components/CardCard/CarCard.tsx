@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Car } from "@/data/mockCars";
 import { IoMdClose, IoMdInformationCircleOutline } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
@@ -326,13 +327,15 @@ export function CarCard({
               </div>
             </div>
 
-            <div className="pt-2">
-              <button className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between">
-                <span className="text-white font-bold text-sm">
-                  HEMEN KİRALA
-                </span>
-                <MdKeyboardArrowRight className="text-white text-2xl" />
-              </button>
+            <div className="pt-2 pointer-events-auto">
+              <Link href={`/arac/${car.id}`}>
+                <button className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between hover:bg-blue-600 transition-colors">
+                  <span className="text-white font-bold text-sm">
+                    HEMEN KİRALA
+                  </span>
+                  <MdKeyboardArrowRight className="text-white text-2xl" />
+                </button>
+              </Link>
             </div>
           </div>
         </div>

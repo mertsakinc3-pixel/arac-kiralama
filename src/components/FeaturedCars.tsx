@@ -1,5 +1,6 @@
 import { mockCars } from "@/data/mockCars";
 import Image from "next/image";
+import Link from "next/link";
 import { IoTrophy } from "react-icons/io5";
 
 export default function FeaturedCars() {
@@ -93,9 +94,10 @@ export default function FeaturedCars() {
             "ring-2 ring-[#bf8970]";
           
           return (
-            <div
+            <Link
               key={car.id}
-              className={`${sizeClasses} ${orderClasses} ${heightScale} ${ringClasses} bg-white rounded-lg overflow-hidden transition-all duration-300`}
+              href={`/arac/${car.id}`}
+              className={`${sizeClasses} ${orderClasses} ${heightScale} ${ringClasses} bg-white rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer block`}
             >
               {/* Sıra Rozeti ve Rent a Car */}
               <div
@@ -192,7 +194,7 @@ export default function FeaturedCars() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

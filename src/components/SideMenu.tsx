@@ -12,10 +12,6 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { IoLogInOutline } from "react-icons/io5";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { IoCarSportOutline } from "react-icons/io5";
-import { IoHeartOutline } from "react-icons/io5";
-import { IoCalendarOutline } from "react-icons/io5";
-import { IoPersonOutline } from "react-icons/io5";
-import { IoSettingsOutline } from "react-icons/io5";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -26,10 +22,6 @@ const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
   const menuItems = [
     { icon: IoHomeOutline, label: "Ana Sayfa", href: "/" },
     { icon: IoCarSportOutline, label: "Araç Kirala", href: "/arac-kirala" },
-    { icon: IoPersonOutline, label: "Profilim", href: "/profil" },
-    { icon: IoCalendarOutline, label: "Rezervasyonlarım", href: "/rezervasyonlarim" },
-    { icon: IoHeartOutline, label: "Favorilerim", href: "/favoriler" },
-    { icon: IoSettingsOutline, label: "Ayarlar", href: "/ayarlar" },
     { icon: IoInformationCircleOutline, label: "Hakkımızda", href: "/about" },
     {
       icon: IoBusinessOutline,
@@ -113,7 +105,7 @@ const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
                   <IoLogOutOutline className="text-2xl" />
                   <span className="font-medium">Çıkış Yap</span>
                 </button>
-                
+
                 <a
                   href="/login"
                   className="flex items-center gap-4 p-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors w-full"
@@ -122,7 +114,7 @@ const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
                   <IoLogInOutline className="text-2xl" />
                   <span className="font-medium">Giriş Yap</span>
                 </a>
-                
+
                 <a
                   href="/register"
                   className="flex items-center gap-4 p-3 text-green-600 hover:bg-green-50 rounded-lg transition-colors w-full"

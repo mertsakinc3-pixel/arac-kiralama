@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/card";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [loginType, setLoginType] = useState<"email" | "phone">("email");
   const [formData, setFormData] = useState({
     email: "",
@@ -63,9 +65,22 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Login form submitted:", formData);
-      // Here you would typically send the data to your backend
-      alert("Giriş başarılı!");
+      // Mock kullanıcı verisi oluştur
+      const userData = {
+        name: loginType === "email" ? formData.email.split("@")[0] : "Kullanıcı",
+        email: loginType === "email" ? formData.email : "",
+        phone: loginType === "phone" ? formData.phone : "",
+        loginType: loginType,
+      };
+
+      // LocalStorage'a kaydet
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // Başarılı giriş mesajı
+      alert("Giriş başarılı! Hoş geldiniz.");
+
+      // Ana sayfaya yönlendir
+      router.push("/");
     }
   };
 
