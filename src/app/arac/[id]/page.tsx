@@ -1,9 +1,6 @@
-"use client";
-
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
 import { 
   IoCall, 
   IoMail, 
@@ -18,33 +15,62 @@ import {
   IoShield,
   IoCard
 } from "react-icons/io5";
-import { mockCars, Car } from "@/data/mockCars";
+import { mockCars } from "@/data/mockCars";
 
-export default function AracDetayPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [car, setCar] = useState<Car | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // ID'ye göre aracı bul
-    const foundCar = mockCars.find(c => c.id === params.id);
-    if (foundCar) {
-      setCar(foundCar);
-    }
-    setLoading(false);
-  }, [params.id]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Yükleniyor...</p>
-        </div>
-      </div>
-    );
+// Metadata oluşturma - WhatsApp ve diğer sosyal medya platformları için
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}): Promise<Metadata> {
+  const { id } = await params;
+  const car = mockCars.find(c => c.id === id);
+  
+  if (!car) {
+    return {
+      title: "Araç Bulunamadı",
+    };
   }
+
+  const title = `${car.brand} ${car.model} - Günlük ${car.price} TL`;
+  const description = `${car.year} model ${car.brand} ${car.model} araç kirala. ${car.fuelType}, ${car.transmission}, ${car.seats} kişilik. ${car.description}`;
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://arackiralama.com'}/arac/${car.id}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Araç Kiralama",
+      images: [
+        {
+          url: car.image,
+          width: 1200,
+          height: 630,
+          alt: `${car.brand} ${car.model} - ${car.year}`,
+        },
+      ],
+      locale: "tr_TR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [car.image],
+    },
+  };
+}
+
+export default async function AracDetayPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+  const car = mockCars.find(c => c.id === id);
 
   if (!car) {
     return (

@@ -359,6 +359,15 @@ ${url}
                 </div>
 
                 <div className="space-y-3">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <p className="text-xs text-blue-800 flex items-center gap-2">
+                      <span className="text-lg">💡</span>
+                      <span>
+                        <strong>WhatsApp&apos;ta paylaşırken</strong> araç resmi ve bilgileri otomatik görünecek!
+                      </span>
+                    </p>
+                  </div>
+
                   <p className="text-sm text-gray-600 font-medium mb-3">
                     Sosyal medyada paylaş:
                   </p>
