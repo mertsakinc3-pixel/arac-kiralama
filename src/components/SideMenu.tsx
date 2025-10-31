@@ -11,6 +11,11 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import { IoLogInOutline } from "react-icons/io5";
 import { IoPersonAddOutline } from "react-icons/io5";
+import { IoCarSportOutline } from "react-icons/io5";
+import { IoHeartOutline } from "react-icons/io5";
+import { IoCalendarOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -20,6 +25,11 @@ interface SideMenuProps {
 const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
   const menuItems = [
     { icon: IoHomeOutline, label: "Ana Sayfa", href: "/" },
+    { icon: IoCarSportOutline, label: "Araç Kirala", href: "/arac-kirala" },
+    { icon: IoPersonOutline, label: "Profilim", href: "/profil" },
+    { icon: IoCalendarOutline, label: "Rezervasyonlarım", href: "/rezervasyonlarim" },
+    { icon: IoHeartOutline, label: "Favorilerim", href: "/favoriler" },
+    { icon: IoSettingsOutline, label: "Ayarlar", href: "/ayarlar" },
     { icon: IoInformationCircleOutline, label: "Hakkımızda", href: "/about" },
     {
       icon: IoBusinessOutline,

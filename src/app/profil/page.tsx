@@ -18,6 +18,19 @@ export default function Profil() {
     }
   }, []);
 
+  // Favorileri ve rezervasyonları say
+  const getFavoriteCount = () => {
+    if (typeof window !== "undefined") {
+      const favorites = localStorage.getItem("favorites");
+      return favorites ? JSON.parse(favorites).length : 0;
+    }
+    return 0;
+  };
+
+  // Mock rezervasyon sayıları - gerçek API'den gelecek
+  const getActiveReservations = () => 1; // Aktif kiralama sayısı
+  const getCompletedReservations = () => 1; // Tamamlanan kiralama sayısı
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
@@ -132,7 +145,9 @@ export default function Profil() {
                   <Car className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {getActiveReservations()}
+                  </p>
                   <p className="text-xs text-gray-600">Aktif Kiralama</p>
                 </div>
               </div>
@@ -144,7 +159,9 @@ export default function Profil() {
                   <Calendar className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {getCompletedReservations()}
+                  </p>
                   <p className="text-xs text-gray-600">Tamamlanan</p>
                 </div>
               </div>
@@ -156,7 +173,9 @@ export default function Profil() {
                   <Heart className="w-6 h-6 text-red-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {getFavoriteCount()}
+                  </p>
                   <p className="text-xs text-gray-600">Favoriler</p>
                 </div>
               </div>

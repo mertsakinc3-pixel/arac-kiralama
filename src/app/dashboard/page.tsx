@@ -404,7 +404,7 @@ export default function DashboardPage() {
           {/* Sağ Taraf - İstatistikler ve Aksiyonlar */}
           <div className="lg:col-span-2">
             {/* İstatistik Kartları */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -435,21 +435,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Toplam Gelir</p>
-                    <p className="text-2xl font-bold text-gray-800">
-                      {rentACarInfo.totalRevenue}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                    <span className="text-purple-600 text-2xl font-bold">
-                      ₺
-                    </span>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             {/* Ana Aksiyon Butonları */}

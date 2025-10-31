@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { IoArrowBack, IoCar, IoTrash, IoCreate, IoEye, IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { IoArrowBack, IoCar, IoTrash, IoCreate, IoEye, IoCheckmarkCircle, IoCloseCircle, IoShareSocial } from "react-icons/io5";
+import { FaWhatsapp, FaFacebook, FaInstagram, FaTiktok, FaTwitter, FaLinkedin, FaCopy } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { mockCars, Car } from "@/data/mockCars";
@@ -16,6 +17,8 @@ export default function AracListesiPage() {
     mockCars.map(car => ({ ...car, isPublished: true }))
   );
   const [selectedCar, setSelectedCar] = useState<CarWithPublish | null>(null);
+  const [shareModalCar, setShareModalCar] = useState<CarWithPublish | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const handleDelete = (carId: string) => {
     if (confirm("Bu aracı silmek istediğinizden emin misiniz?")) {
@@ -34,6 +37,59 @@ export default function AracListesiPage() {
     if (car) {
       alert(car.isPublished ? "Araç yayından kaldırıldı!" : "Araç yayına alındı!");
     }
+  };
+
+  const getCarShareUrl = (car: CarWithPublish) => {
+    // Gerçek uygulamada bu dinamik olacak
+    return `${window.location.origin}/arac-kirala?id=${car.id}`;
+  };
+
+  const getCarShareText = (car: CarWithPublish) => {
+    return `${car.brand} ${car.model} - Günlük ${car.price} TL'den başlayan fiyatlarla kirala!`;
+  };
+
+  const handleShare = (platform: string, car: CarWithPublish) => {
+    const url = getCarShareUrl(car);
+    const text = getCarShareText(car);
+    
+    let shareUrl = "";
+    
+    switch (platform) {
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        break;
+      case "instagram":
+        // Instagram web'den doğrudan paylaşım desteklemiyor, kullanıcıyı bilgilendir
+        alert("Instagram'da paylaşmak için linki kopyalayıp Instagram uygulamasında paylaşabilirsiniz.");
+        handleCopyLink(car);
+        return;
+      case "tiktok":
+        // TikTok web'den doğrudan paylaşım desteklemiyor
+        alert("TikTok'ta paylaşmak için linki kopyalayıp TikTok uygulamasında paylaşabilirsiniz.");
+        handleCopyLink(car);
+        return;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, "_blank", "width=600,height=400");
+    }
+  };
+
+  const handleCopyLink = (car: CarWithPublish) => {
+    const url = getCarShareUrl(car);
+    navigator.clipboard.writeText(url).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    });
   };
 
   return (
@@ -166,6 +222,13 @@ export default function AracListesiPage() {
                       Detay
                     </button>
                     <button
+                      onClick={() => setShareModalCar(car)}
+                      className="flex items-center justify-center gap-1 px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                      title="Paylaş"
+                    >
+                      <IoShareSocial size={16} />
+                    </button>
+                    <button
                       onClick={() => alert("Düzenleme özelliği yakında eklenecek!")}
                       className="flex items-center justify-center gap-1 px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
                     >
@@ -202,6 +265,123 @@ export default function AracListesiPage() {
             </div>
           ))}
         </div>
+
+        {/* Paylaşım Modal */}
+        {shareModalCar && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    Aracı Paylaş
+                  </h2>
+                  <button
+                    onClick={() => {
+                      setShareModalCar(null);
+                      setCopySuccess(false);
+                    }}
+                    className="text-gray-500 hover:text-gray-700 text-2xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="mb-6">
+                  <div className="relative w-full h-32 mb-4">
+                    <Image
+                      src={shareModalCar.image}
+                      alt={`${shareModalCar.brand} ${shareModalCar.model}`}
+                      fill
+                      className="object-cover rounded-lg"
+                      sizes="400px"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    {shareModalCar.brand} {shareModalCar.model}
+                  </h3>
+                  <p className="text-gray-600">
+                    Günlük {shareModalCar.price} TL
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 font-medium mb-3">
+                    Sosyal medyada paylaş:
+                  </p>
+                  
+                  {/* WhatsApp */}
+                  <button
+                    onClick={() => handleShare("whatsapp", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <FaWhatsapp size={24} />
+                    <span className="font-medium">WhatsApp&apos;ta Paylaş</span>
+                  </button>
+
+                  {/* Facebook */}
+                  <button
+                    onClick={() => handleShare("facebook", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <FaFacebook size={24} />
+                    <span className="font-medium">Facebook&apos;ta Paylaş</span>
+                  </button>
+
+                  {/* Twitter */}
+                  <button
+                    onClick={() => handleShare("twitter", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+                  >
+                    <FaTwitter size={24} />
+                    <span className="font-medium">Twitter&apos;da Paylaş</span>
+                  </button>
+
+                  {/* LinkedIn */}
+                  <button
+                    onClick={() => handleShare("linkedin", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                  >
+                    <FaLinkedin size={24} />
+                    <span className="font-medium">LinkedIn&apos;de Paylaş</span>
+                  </button>
+
+                  {/* Instagram */}
+                  <button
+                    onClick={() => handleShare("instagram", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-lg hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors"
+                  >
+                    <FaInstagram size={24} />
+                    <span className="font-medium">Instagram&apos;da Paylaş</span>
+                  </button>
+
+                  {/* TikTok */}
+                  <button
+                    onClick={() => handleShare("tiktok", shareModalCar)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors"
+                  >
+                    <FaTiktok size={24} />
+                    <span className="font-medium">TikTok&apos;ta Paylaş</span>
+                  </button>
+
+                  {/* Link Kopyala */}
+                  <button
+                    onClick={() => handleCopyLink(shareModalCar)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                      copySuccess
+                        ? "bg-green-500 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    <FaCopy size={24} />
+                    <span className="font-medium">
+                      {copySuccess ? "Link Kopyalandı! ✓" : "Linki Kopyala"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Detay Modal */}
         {selectedCar && (

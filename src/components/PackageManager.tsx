@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { IoCarSport, IoCalendar, IoWarning, IoCheckmarkCircle, IoAdd } from "react-icons/io5";
+import {
+  IoCarSport,
+  IoCalendar,
+  IoWarning,
+  IoCheckmarkCircle,
+  IoAdd,
+} from "react-icons/io5";
 import Link from "next/link";
 
 // Mock data - backend hazır olunca burası API'den gelecek
@@ -83,40 +89,49 @@ export default function PackageManager() {
   return (
     <div className="space-y-4">
       {/* Ana Paket Kartı - Modern ve Klasik Tasarım */}
-      <div className={`rounded-xl shadow-lg overflow-hidden ${
-        warningLevel === "critical" 
-          ? "bg-white border-2 border-red-500" 
-          : warningLevel === "warning"
-          ? "bg-white border-2 border-amber-500"
-          : "bg-white border-2 border-slate-200"
-      }`}>
-        {/* Header Bölümü */}
-        <div className={`p-6 ${
-          warningLevel === "critical" 
-            ? "bg-gradient-to-r from-red-50 to-red-100" 
+      <div
+        className={`rounded-xl shadow-lg overflow-hidden ${
+          warningLevel === "critical"
+            ? "bg-white border-2 border-red-500"
             : warningLevel === "warning"
-            ? "bg-gradient-to-r from-amber-50 to-amber-100"
-            : "bg-gradient-to-r from-slate-50 to-slate-100"
-        }`}>
+            ? "bg-white border-2 border-amber-500"
+            : "bg-white border-2 border-slate-200"
+        }`}
+      >
+        {/* Header Bölümü */}
+        <div
+          className={`p-6 ${
+            warningLevel === "critical"
+              ? "bg-gradient-to-r from-red-50 to-red-100"
+              : warningLevel === "warning"
+              ? "bg-gradient-to-r from-amber-50 to-amber-100"
+              : "bg-gradient-to-r from-slate-50 to-slate-100"
+          }`}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
-                warningLevel === "critical" 
-                  ? "bg-red-500" 
-                  : warningLevel === "warning"
-                  ? "bg-amber-500"
-                  : "bg-slate-700"
-              }`}>
+              <div
+                className={`w-14 h-14 rounded-xl flex items-center justify-center ${
+                  warningLevel === "critical"
+                    ? "bg-red-500"
+                    : warningLevel === "warning"
+                    ? "bg-amber-500"
+                    : "bg-slate-700"
+                }`}
+              >
                 <IoCarSport className="text-white" size={28} />
               </div>
               <div>
-                <h3 className="text-slate-800 text-xl font-bold">Araç Paketiniz</h3>
+                <h3 className="text-slate-800 text-xl font-bold">
+                  Araç Paketiniz
+                </h3>
                 <p className="text-slate-600 text-sm">
-                  {packageInfo.usedSlots} / {packageInfo.totalSlots} Araç Kullanımda
+                  {packageInfo.usedSlots} / {packageInfo.totalSlots} Araç
+                  Kullanımda
                 </p>
               </div>
             </div>
-            
+
             <button
               onClick={() => setShowDetails(!showDetails)}
               className="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
@@ -130,13 +145,17 @@ export default function PackageManager() {
             <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  warningLevel === "critical" 
-                    ? "bg-red-500" 
+                  warningLevel === "critical"
+                    ? "bg-red-500"
                     : warningLevel === "warning"
                     ? "bg-amber-500"
                     : "bg-slate-700"
                 }`}
-                style={{ width: `${(packageInfo.usedSlots / packageInfo.totalSlots) * 100}%` }}
+                style={{
+                  width: `${
+                    (packageInfo.usedSlots / packageInfo.totalSlots) * 100
+                  }%`,
+                }}
               />
             </div>
           </div>
@@ -146,69 +165,58 @@ export default function PackageManager() {
         <div className="p-6">
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">Toplam Slot</p>
-              <p className="text-slate-800 text-3xl font-bold">{packageInfo.totalSlots}</p>
+              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">
+                Toplam Slot
+              </p>
+              <p className="text-slate-800 text-3xl font-bold">
+                {packageInfo.totalSlots}
+              </p>
             </div>
-            
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">Kullanılan</p>
-              <p className="text-slate-800 text-3xl font-bold">{packageInfo.usedSlots}</p>
-            </div>
-            
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">Boş Slot</p>
-              <p className="text-slate-800 text-3xl font-bold">{packageInfo.availableSlots}</p>
-            </div>
-          </div>
 
-          {/* Süre Bilgisi */}
-          <div className={`rounded-lg p-4 border-2 ${
-            warningLevel === "critical" 
-              ? "bg-red-50 border-red-200" 
-              : warningLevel === "warning"
-              ? "bg-amber-50 border-amber-200"
-              : "bg-slate-50 border-slate-200"
-          }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <IoCalendar className={
-                  warningLevel === "critical" 
-                    ? "text-red-600" 
-                    : warningLevel === "warning"
-                    ? "text-amber-600"
-                    : "text-slate-600"
-                } size={22} />
-                <span className="text-slate-700 font-semibold">Kalan Süre</span>
-              </div>
-              <div className="text-right">
-                <p className={`text-2xl font-bold ${
-                  warningLevel === "critical" 
-                    ? "text-red-600" 
-                    : warningLevel === "warning"
-                    ? "text-amber-600"
-                    : "text-slate-700"
-                }`}>{packageInfo.daysRemaining} Gün</p>
-                <p className="text-slate-500 text-xs">
-                  Bitiş: {new Date(packageInfo.expiryDate).toLocaleDateString('tr-TR')}
-                </p>
-              </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">
+                Kullanılan
+              </p>
+              <p className="text-slate-800 text-3xl font-bold">
+                {packageInfo.usedSlots}
+              </p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-slate-500 text-xs font-medium mb-1.5 uppercase tracking-wide">
+                Boş Slot
+              </p>
+              <p className="text-slate-800 text-3xl font-bold">
+                {packageInfo.availableSlots}
+              </p>
             </div>
           </div>
 
           {/* Uyarı Mesajı */}
           {warningLevel !== "normal" && (
-            <div className={`mt-4 rounded-lg p-4 flex items-start gap-3 border-2 ${
-              warningLevel === "critical" 
-                ? "bg-red-50 border-red-300" 
-                : "bg-amber-50 border-amber-300"
-            }`}>
-              <IoWarning className={
-                warningLevel === "critical" ? "text-red-600" : "text-amber-600"
-              } size={22} />
-              <p className={`text-sm font-medium ${
-                warningLevel === "critical" ? "text-red-800" : "text-amber-800"
-              }`}>
-                {warningLevel === "critical" 
+            <div
+              className={`mt-4 rounded-lg p-4 flex items-start gap-3 border-2 ${
+                warningLevel === "critical"
+                  ? "bg-red-50 border-red-300"
+                  : "bg-amber-50 border-amber-300"
+              }`}
+            >
+              <IoWarning
+                className={
+                  warningLevel === "critical"
+                    ? "text-red-600"
+                    : "text-amber-600"
+                }
+                size={22}
+              />
+              <p
+                className={`text-sm font-medium ${
+                  warningLevel === "critical"
+                    ? "text-red-800"
+                    : "text-amber-800"
+                }`}
+              >
+                {warningLevel === "critical"
                   ? "Paketiniz çok yakında sona erecek! Araçlarınız pasif hale gelecek."
                   : "Paketinizin süresi yakında dolacak. Yeni paket almayı unutmayın!"}
               </p>
@@ -230,14 +238,16 @@ export default function PackageManager() {
       {/* Detaylı Slot Listesi */}
       {showDetails && (
         <div className="bg-white rounded-xl shadow-lg border-2 border-slate-200 p-6 animate-fadeIn">
-          <h4 className="text-lg font-bold text-slate-800 mb-4">Araç Slotları</h4>
-          
+          <h4 className="text-lg font-bold text-slate-800 mb-4">
+            Araç Slotları
+          </h4>
+
           {carSlots.length > 0 ? (
             <div className="space-y-3">
               {carSlots.map((slot) => {
                 const daysLeft = calculateDaysRemaining(slot.expiryDate);
                 const slotWarning = getWarningLevel(daysLeft);
-                
+
                 return (
                   <div
                     key={slot.id}
@@ -252,34 +262,45 @@ export default function PackageManager() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <IoCheckmarkCircle 
+                          <IoCheckmarkCircle
                             className={
-                              slotWarning === "critical" ? "text-red-500" :
-                              slotWarning === "warning" ? "text-amber-500" :
-                              "text-slate-600"
-                            } 
-                            size={20} 
+                              slotWarning === "critical"
+                                ? "text-red-500"
+                                : slotWarning === "warning"
+                                ? "text-amber-500"
+                                : "text-slate-600"
+                            }
+                            size={20}
                           />
-                          <h5 className="font-bold text-slate-800">{slot.carName}</h5>
+                          <h5 className="font-bold text-slate-800">
+                            {slot.carName}
+                          </h5>
                         </div>
                         <p className="text-sm text-slate-600 mb-1">
                           Plaka: <strong>{slot.plateNumber}</strong>
                         </p>
                         <p className="text-xs text-slate-500">
-                          Eklendi: {new Date(slot.addedDate).toLocaleDateString('tr-TR')}
+                          Eklendi:{" "}
+                          {new Date(slot.addedDate).toLocaleDateString("tr-TR")}
                         </p>
                       </div>
-                      
+
                       <div className="text-right">
-                        <p className={`text-lg font-bold ${
-                          slotWarning === "critical" ? "text-red-600" :
-                          slotWarning === "warning" ? "text-amber-600" :
-                          "text-slate-700"
-                        }`}>
+                        <p
+                          className={`text-lg font-bold ${
+                            slotWarning === "critical"
+                              ? "text-red-600"
+                              : slotWarning === "warning"
+                              ? "text-amber-600"
+                              : "text-slate-700"
+                          }`}
+                        >
                           {daysLeft} Gün
                         </p>
                         <p className="text-xs text-slate-500">
-                          {new Date(slot.expiryDate).toLocaleDateString('tr-TR')}
+                          {new Date(slot.expiryDate).toLocaleDateString(
+                            "tr-TR"
+                          )}
                         </p>
                       </div>
                     </div>
@@ -318,4 +339,3 @@ export default function PackageManager() {
     </div>
   );
 }
-
