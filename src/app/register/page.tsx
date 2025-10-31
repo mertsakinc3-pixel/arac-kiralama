@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -100,24 +98,9 @@ export default function RegisterPage() {
     e.preventDefault();
     
     if (validateForm()) {
-      // Mock kullanıcı verisi oluştur
-      const userData = {
-        name: formData.userType === 'customer' 
-          ? `${formData.firstName} ${formData.lastName}` 
-          : formData.companyName,
-        email: formData.email,
-        phone: formData.phone,
-        userType: formData.userType,
-      };
-
-      // LocalStorage'a kaydet
-      localStorage.setItem('user', JSON.stringify(userData));
-
-      // Başarılı kayıt mesajı
-      alert('Kayıt başarılı! Hoş geldiniz.');
-
-      // Ana sayfaya yönlendir
-      router.push('/');
+      console.log('Form submitted:', formData);
+      // Here you would typically send the data to your backend
+      alert('Kayıt başarılı!');
     }
   };
 
