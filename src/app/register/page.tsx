@@ -1,50 +1,62 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    phone: '',
-    phone2: '',
-    userType: 'customer',
-    companyName: '',
-    companyAddress: '',
-    taxNumber: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phone: "",
+    phone2: "",
+    userType: "customer",
+    companyName: "",
+    companyAddress: "",
+    taxNumber: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const handleSelectChange = (value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      userType: value
+      userType: value,
     }));
   };
 
@@ -52,41 +64,41 @@ export default function RegisterPage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email gereklidir';
+      newErrors.email = "Email gereklidir";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Geçerli bir email adresi giriniz';
+      newErrors.email = "Geçerli bir email adresi giriniz";
     }
 
-    if (formData.userType === 'rentacar_owner') {
+    if (formData.userType === "rentacar_owner") {
       if (!formData.password) {
-        newErrors.password = 'Şifre gereklidir';
+        newErrors.password = "Şifre gereklidir";
       } else if (formData.password.length < 6) {
-        newErrors.password = 'Şifre en az 6 karakter olmalıdır';
+        newErrors.password = "Şifre en az 6 karakter olmalıdır";
       }
     }
 
     if (!formData.phone) {
-      newErrors.phone = 'Telefon numarası gereklidir';
+      newErrors.phone = "Telefon numarası gereklidir";
     }
 
-    if (formData.userType === 'customer') {
+    if (formData.userType === "customer") {
       if (!formData.firstName) {
-        newErrors.firstName = 'Ad gereklidir';
+        newErrors.firstName = "Ad gereklidir";
       }
       if (!formData.lastName) {
-        newErrors.lastName = 'Soyad gereklidir';
+        newErrors.lastName = "Soyad gereklidir";
       }
     }
 
-    if (formData.userType === 'rentacar_owner') {
+    if (formData.userType === "rentacar_owner") {
       if (!formData.companyName) {
-        newErrors.companyName = 'Şirket adı gereklidir';
+        newErrors.companyName = "Şirket adı gereklidir";
       }
       if (!formData.companyAddress) {
-        newErrors.companyAddress = 'Şirket adresi gereklidir';
+        newErrors.companyAddress = "Şirket adresi gereklidir";
       }
       if (!formData.taxNumber) {
-        newErrors.taxNumber = 'Vergi numarası gereklidir';
+        newErrors.taxNumber = "Vergi numarası gereklidir";
       }
     }
 
@@ -96,25 +108,16 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      console.log('Form submitted:', formData);
+      console.log("Form submitted:", formData);
       // Here you would typically send the data to your backend
-      alert('Kayıt başarılı!');
+      alert("Kayıt başarılı!");
     }
   };
 
   return (
     <div className="min-h-screen bg-gradrdntnt-to-br from-blue-50 to-indigo-100 flex flex-col justify-start py-16 sm:px-8 lg:px-12">
-      {/* Logo */}
-      <div className="text-center mb-8">
-        <Link href="/" className="inline-block">
-          <h1 className="text-4xl font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer">
-            KiralamaYeri
-          </h1>
-        </Link>
-      </div>
-
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
@@ -139,25 +142,30 @@ export default function RegisterPage() {
               {/* User Type */}
               <div className="space-y-2">
                 <Label htmlFor="userType">Kullanıcı Tipi</Label>
-                <Select value={formData.userType} onValueChange={handleSelectChange}>
+                <Select
+                  value={formData.userType}
+                  onValueChange={handleSelectChange}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Kullanıcı tipini seçin" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="customer">Müşteri</SelectItem>
-                    <SelectItem value="rentacar_owner">Rent a Car Sahibi</SelectItem>
+                    <SelectItem value="rentacar_owner">
+                      Rent a Car Sahibi
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Customer Fields */}
               <AnimatePresence>
-                {formData.userType === 'customer' && (
+                {formData.userType === "customer" && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
                     <motion.div
@@ -183,10 +191,12 @@ export default function RegisterPage() {
                           value={formData.firstName}
                           onChange={handleInputChange}
                           placeholder="Adınızı giriniz"
-                          className={errors.firstName ? 'border-red-500' : ''}
+                          className={errors.firstName ? "border-red-500" : ""}
                         />
                         {errors.firstName && (
-                          <p className="text-sm text-red-600">{errors.firstName}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.firstName}
+                          </p>
                         )}
                       </div>
 
@@ -200,10 +210,12 @@ export default function RegisterPage() {
                           value={formData.lastName}
                           onChange={handleInputChange}
                           placeholder="Soyadınızı giriniz"
-                          className={errors.lastName ? 'border-red-500' : ''}
+                          className={errors.lastName ? "border-red-500" : ""}
                         />
                         {errors.lastName && (
-                          <p className="text-sm text-red-600">{errors.lastName}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.lastName}
+                          </p>
                         )}
                       </div>
 
@@ -219,7 +231,7 @@ export default function RegisterPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="email@example.com"
-                          className={errors.email ? 'border-red-500' : ''}
+                          className={errors.email ? "border-red-500" : ""}
                         />
                         {errors.email && (
                           <p className="text-sm text-red-600">{errors.email}</p>
@@ -238,7 +250,7 @@ export default function RegisterPage() {
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="0555 123 45 67"
-                          className={errors.phone ? 'border-red-500' : ''}
+                          className={errors.phone ? "border-red-500" : ""}
                         />
                         {errors.phone && (
                           <p className="text-sm text-red-600">{errors.phone}</p>
@@ -251,12 +263,12 @@ export default function RegisterPage() {
 
               {/* Rent a Car Owner Fields */}
               <AnimatePresence>
-                {formData.userType === 'rentacar_owner' && (
+                {formData.userType === "rentacar_owner" && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
                     <motion.div
@@ -284,7 +296,7 @@ export default function RegisterPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="email@example.com"
-                          className={errors.email ? 'border-red-500' : ''}
+                          className={errors.email ? "border-red-500" : ""}
                         />
                         {errors.email && (
                           <p className="text-sm text-red-600">{errors.email}</p>
@@ -303,7 +315,7 @@ export default function RegisterPage() {
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="0555 123 45 67"
-                          className={errors.phone ? 'border-red-500' : ''}
+                          className={errors.phone ? "border-red-500" : ""}
                         />
                         {errors.phone && (
                           <p className="text-sm text-red-600">{errors.phone}</p>
@@ -321,10 +333,12 @@ export default function RegisterPage() {
                           value={formData.phone2}
                           onChange={handleInputChange}
                           placeholder="0555 987 65 43"
-                          className={errors.phone2 ? 'border-red-500' : ''}
+                          className={errors.phone2 ? "border-red-500" : ""}
                         />
                         {errors.phone2 && (
-                          <p className="text-sm text-red-600">{errors.phone2}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.phone2}
+                          </p>
                         )}
                       </div>
 
@@ -340,10 +354,12 @@ export default function RegisterPage() {
                           value={formData.password}
                           onChange={handleInputChange}
                           placeholder="En az 6 karakter"
-                          className={errors.password ? 'border-red-500' : ''}
+                          className={errors.password ? "border-red-500" : ""}
                         />
                         {errors.password && (
-                          <p className="text-sm text-red-600">{errors.password}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.password}
+                          </p>
                         )}
                       </div>
 
@@ -357,10 +373,12 @@ export default function RegisterPage() {
                           value={formData.companyName}
                           onChange={handleInputChange}
                           placeholder="Şirket adınızı giriniz"
-                          className={errors.companyName ? 'border-red-500' : ''}
+                          className={errors.companyName ? "border-red-500" : ""}
                         />
                         {errors.companyName && (
-                          <p className="text-sm text-red-600">{errors.companyName}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.companyName}
+                          </p>
                         )}
                       </div>
 
@@ -374,10 +392,14 @@ export default function RegisterPage() {
                           value={formData.companyAddress}
                           onChange={handleInputChange}
                           placeholder="Şirket adresinizi giriniz"
-                          className={errors.companyAddress ? 'border-red-500' : ''}
+                          className={
+                            errors.companyAddress ? "border-red-500" : ""
+                          }
                         />
                         {errors.companyAddress && (
-                          <p className="text-sm text-red-600">{errors.companyAddress}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.companyAddress}
+                          </p>
                         )}
                       </div>
 
@@ -391,10 +413,12 @@ export default function RegisterPage() {
                           value={formData.taxNumber}
                           onChange={handleInputChange}
                           placeholder="Vergi numaranızı giriniz"
-                          className={errors.taxNumber ? 'border-red-500' : ''}
+                          className={errors.taxNumber ? "border-red-500" : ""}
                         />
                         {errors.taxNumber && (
-                          <p className="text-sm text-red-600">{errors.taxNumber}</p>
+                          <p className="text-sm text-red-600">
+                            {errors.taxNumber}
+                          </p>
                         )}
                       </div>
                     </motion.div>
@@ -410,8 +434,11 @@ export default function RegisterPage() {
               {/* Login Link */}
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Zaten hesabınız var mı?{' '}
-                  <Link href="/login" className="font-medium text-primary hover:text-primary/80">
+                  Zaten hesabınız var mı?{" "}
+                  <Link
+                    href="/login"
+                    className="font-medium text-primary hover:text-primary/80"
+                  >
                     Giriş yapın
                   </Link>
                 </p>

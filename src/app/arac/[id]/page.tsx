@@ -1,6 +1,9 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Metadata } from "next";
+import { useParams, useRouter } from "next/navigation";
 import { 
   IoCall, 
   IoMail, 
@@ -13,64 +16,146 @@ import {
   IoSettings,
   IoPeople,
   IoShield,
-  IoCard
+  IoCard,
+  IoClose,
+  IoArrowForward,
+  IoArrowBack,
+  IoPerson,
 } from "react-icons/io5";
 import { mockCars } from "@/data/mockCars";
 
-// Metadata oluşturma - WhatsApp ve diğer sosyal medya platformları için
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
-}): Promise<Metadata> {
-  const { id } = await params;
+export default function AracDetayPage() {
+  const params = useParams();
+  const router = useRouter();
+  const id = params.id as string;
   const car = mockCars.find(c => c.id === id);
-  
-  if (!car) {
-    return {
-      title: "Araç Bulunamadı",
-    };
-  }
 
-  const title = `${car.brand} ${car.model} - Günlük ${car.price} TL`;
-  const description = `${car.year} model ${car.brand} ${car.model} araç kirala. ${car.fuelType}, ${car.transmission}, ${car.seats} kişilik. ${car.description}`;
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://arackiralama.com'}/arac/${car.id}`;
+  // Modal state
+  const [showRentalModal, setShowRentalModal] = useState(false);
+  const [modalStep, setModalStep] = useState(1);
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: "Araç Kiralama",
-      images: [
-        {
-          url: car.image,
-          width: 1200,
-          height: 630,
-          alt: `${car.brand} ${car.model} - ${car.year}`,
-        },
-      ],
-      locale: "tr_TR",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [car.image],
-    },
+  // Step 1: Tarih bilgileri
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  // Step 2: Kişisel bilgiler
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [tcNo, setTcNo] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+
+  // Bugünün tarihini al (minimum tarih için)
+  const today = new Date().toISOString().split('T')[0];
+
+  // Toplam gün ve fiyat hesaplama
+  const calculateDays = () => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays || 1;
+    }
+    return 0;
   };
-}
 
-export default async function AracDetayPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
-}) {
-  const { id } = await params;
-  const car = mockCars.find(c => c.id === id);
+  const totalDays = calculateDays();
+  const totalPrice = car ? totalDays * car.price : 0;
+
+  // Modal açıldığında body scroll'u kapat
+  useEffect(() => {
+    if (showRentalModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showRentalModal]);
+
+  const handleNextStep = () => {
+    if (modalStep === 1) {
+      // Tarih validasyonu
+      if (!startDate || !endDate) {
+        alert("Lütfen başlangıç ve bitiş tarihlerini seçin!");
+        return;
+      }
+      if (new Date(endDate) <= new Date(startDate)) {
+        alert("Bitiş tarihi başlangıç tarihinden sonra olmalıdır!");
+        return;
+      }
+      setModalStep(2);
+    } else if (modalStep === 2) {
+      // Kişisel bilgi validasyonu
+      if (!firstName || !lastName || !phone || !tcNo || !birthDate) {
+        alert("Lütfen tüm alanları doldurun!");
+        return;
+      }
+      if (tcNo.length !== 11) {
+        alert("TC Kimlik No 11 haneli olmalıdır!");
+        return;
+      }
+      if (phone.length < 10) {
+        alert("Lütfen geçerli bir telefon numarası girin!");
+        return;
+      }
+
+      // Kullanıcıyı kaydet
+      const userData = {
+        firstName,
+        lastName,
+        phone,
+        tcNo,
+        birthDate,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`, // Otomatik email
+      };
+
+      // LocalStorage'a kaydet
+      localStorage.setItem("user", JSON.stringify({
+        name: `${firstName} ${lastName}`,
+        email: userData.email,
+        phone,
+        tcNo,
+        birthDate,
+      }));
+
+      // Rezervasyon bilgilerini kaydet
+      const reservation = {
+        carId: car?.id,
+        carName: `${car?.brand} ${car?.model}`,
+        startDate,
+        endDate,
+        totalDays,
+        totalPrice,
+        deposit: car?.deposit,
+        userData,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Mevcut rezervasyonları al
+      const existingReservations = JSON.parse(localStorage.getItem("reservations") || "[]");
+      existingReservations.push(reservation);
+      localStorage.setItem("reservations", JSON.stringify(existingReservations));
+
+      // Başarı mesajı ve yönlendirme
+      alert("Rezervasyonunuz başarıyla oluşturuldu! Hesabınız da oluşturuldu.");
+      setShowRentalModal(false);
+      router.push("/rezervasyonlarim");
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (modalStep > 1) {
+      setModalStep(modalStep - 1);
+    }
+  };
+
+  const closeModal = () => {
+    setShowRentalModal(false);
+    setModalStep(1);
+  };
 
   if (!car) {
     return (
@@ -289,12 +374,13 @@ export default async function AracDetayPage({
                   Bu aracı kiralamak için bizimle iletişime geçin veya rezervasyon yapın.
                 </p>
                 <div className="space-y-3">
-                  <Link href="/arac-kirala">
-                    <button className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold">
-                      <IoCard size={20} />
-                      Rezervasyon Yap
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={() => setShowRentalModal(true)}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold"
+                  >
+                    <IoCard size={20} />
+                    Hemen Kirala
+                  </button>
                 </div>
               </div>
             </div>
@@ -315,6 +401,292 @@ export default async function AracDetayPage({
           </div>
         </div>
       </div>
+
+      {/* Kiralama Modal - 2 Adımlı */}
+      {showRentalModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full my-8 relative">
+            {/* Close Button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
+            >
+              <IoClose size={28} />
+            </button>
+
+            {/* Progress Bar */}
+            <div className="bg-gray-100 h-2 rounded-t-2xl overflow-hidden">
+              <div 
+                className="bg-blue-600 h-full transition-all duration-300"
+                style={{ width: `${(modalStep / 2) * 100}%` }}
+              ></div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-8">
+              {/* Step Indicator */}
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <div className={`flex items-center gap-2 ${modalStep >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${modalStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                    1
+                  </div>
+                  <span className="font-semibold hidden sm:inline">Tarih Seçimi</span>
+                </div>
+                <div className="w-12 h-0.5 bg-gray-300"></div>
+                <div className={`flex items-center gap-2 ${modalStep >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${modalStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                    2
+                  </div>
+                  <span className="font-semibold hidden sm:inline">Kişisel Bilgiler</span>
+                </div>
+              </div>
+
+              {/* Araç Bilgisi Özet */}
+              <div className="bg-linear-to-r from-blue-50 to-blue-100 rounded-xl p-4 mb-6 border border-blue-200">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
+                    <Image
+                      src={car.image}
+                      alt={`${car.brand} ${car.model}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-lg">
+                      {car.brand} {car.model}
+                    </h3>
+                    <p className="text-sm text-gray-600">{car.year} - {car.fuelType}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-blue-600 font-bold text-xl">{car.price} TL</span>
+                      <span className="text-gray-500 text-sm">/ gün</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 1: Tarih Seçimi */}
+              {modalStep === 1 && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                      Kiralama Tarihleri
+                    </h2>
+                    <p className="text-gray-600 mb-6">
+                      Aracı ne zaman almak ve teslim etmek istiyorsunuz?
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Başlangıç Tarihi *
+                      </label>
+                      <div className="relative">
+                        <IoCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <input
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          min={today}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Bitiş Tarihi *
+                      </label>
+                      <div className="relative">
+                        <IoCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          min={startDate || today}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fiyat Özeti */}
+                  {totalDays > 0 && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-700">Kiralama Süresi:</span>
+                        <span className="font-bold text-gray-800">{totalDays} Gün</span>
+                      </div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-700">Günlük Fiyat:</span>
+                        <span className="font-bold text-gray-800">{car.price} TL</span>
+                      </div>
+                      <div className="border-t border-green-300 pt-2 mt-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-800 font-semibold">Toplam Tutar:</span>
+                          <span className="font-bold text-green-600 text-2xl">{totalPrice} TL</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-2">
+                        * Depozito: {car.deposit} TL (İade edilecek)
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* STEP 2: Kişisel Bilgiler */}
+              {modalStep === 2 && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                      Kişisel Bilgileriniz
+                    </h2>
+                    <p className="text-gray-600 mb-6">
+                      Rezervasyonunuzu tamamlamak için bilgilerinizi girin
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Ad *
+                      </label>
+                      <div className="relative">
+                        <IoPerson className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <input
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder="Adınız"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Soyad *
+                      </label>
+                      <div className="relative">
+                        <IoPerson className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <input
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          placeholder="Soyadınız"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Telefon Numarası *
+                    </label>
+                    <div className="relative">
+                      <IoCall className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="0555 123 45 67"
+                        maxLength={11}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      TC Kimlik No *
+                    </label>
+                    <input
+                      type="text"
+                      value={tcNo}
+                      onChange={(e) => setTcNo(e.target.value.replace(/\D/g, ''))}
+                      placeholder="12345678901"
+                      maxLength={11}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Doğum Tarihi *
+                    </label>
+                    <div className="relative">
+                      <IoCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                      <input
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      * Araç kiralamak için 18 yaşından büyük olmalısınız
+                    </p>
+                  </div>
+
+                  {/* Özet Bilgi */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">Rezervasyon Özeti</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Başlangıç:</span>
+                        <span className="font-semibold">{new Date(startDate).toLocaleDateString('tr-TR')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Bitiş:</span>
+                        <span className="font-semibold">{new Date(endDate).toLocaleDateString('tr-TR')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Süre:</span>
+                        <span className="font-semibold">{totalDays} Gün</span>
+                      </div>
+                      <div className="border-t border-blue-300 pt-2 mt-2 flex justify-between">
+                        <span className="text-gray-800 font-semibold">Toplam:</span>
+                        <span className="font-bold text-blue-600 text-lg">{totalPrice} TL</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <p className="text-xs text-yellow-800">
+                      <IoShield className="inline mr-1" size={16} />
+                      Bilgileriniz güvende. Rezervasyonunuz onaylandıktan sonra bir hesap oluşturulacaktır.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Modal Footer - Buttons */}
+              <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+                {modalStep > 1 && (
+                  <button
+                    onClick={handlePrevStep}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold"
+                  >
+                    <IoArrowBack size={20} />
+                    Geri
+                  </button>
+                )}
+                <button
+                  onClick={handleNextStep}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                >
+                  {modalStep === 2 ? 'Rezervasyonu Tamamla' : 'İleri'}
+                  {modalStep === 1 && <IoArrowForward size={20} />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

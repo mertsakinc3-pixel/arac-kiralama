@@ -11,6 +11,7 @@ import {
   Moon,
   Sun,
   Save,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,21 +95,63 @@ export default function AyarlarPage() {
                     {/* Form Alanları */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Ad Soyad</Label>
+                        <Label htmlFor="firstName">Ad</Label>
                         <div className="relative">
                           <User
                             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                             size={18}
                           />
                           <Input
-                            id="name"
+                            id="firstName"
                             type="text"
-                            value={user?.name || ""}
+                            value={user?.firstName || ""}
                             onChange={(e) =>
-                              setUser({ ...user, name: e.target.value })
+                              setUser({ ...user, firstName: e.target.value })
                             }
                             className="pl-10"
-                            placeholder="Ad Soyad"
+                            placeholder="Adınız"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="lastName">Soyad</Label>
+                        <div className="relative">
+                          <User
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                            size={18}
+                          />
+                          <Input
+                            id="lastName"
+                            type="text"
+                            value={user?.lastName || ""}
+                            onChange={(e) =>
+                              setUser({ ...user, lastName: e.target.value })
+                            }
+                            className="pl-10"
+                            placeholder="Soyadınız"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="tcNo">TC Kimlik No</Label>
+                        <div className="relative">
+                          <CreditCard
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                            size={18}
+                          />
+                          <Input
+                            id="tcNo"
+                            type="text"
+                            maxLength={11}
+                            value={user?.tcNo || ""}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, "");
+                              setUser({ ...user, tcNo: value });
+                            }}
+                            className="pl-10"
+                            placeholder="TC Kimlik Numaranız"
                           />
                         </div>
                       </div>

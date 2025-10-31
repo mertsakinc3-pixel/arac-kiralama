@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { IoArrowBack, IoCloudUpload, IoQrCode, IoWarning } from "react-icons/io5";
+import {
+  IoArrowBack,
+  IoCloudUpload,
+  IoQrCode,
+  IoWarning,
+} from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -139,14 +144,16 @@ export default function AracEklePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Paket kontrolü
     if (packageInfo.availableSlots <= 0) {
-      alert("❌ Boş slot kalmadı!\n\nYeni araç eklemek için paket satın almanız gerekiyor.");
+      alert(
+        "❌ Boş slot kalmadı!\n\nYeni araç eklemek için paket satın almanız gerekiyor."
+      );
       router.push("/dashboard/paket-sec");
       return;
     }
-    
+
     // Backend hazır olunca burası API'ye gönderilecek
     console.log("Araç Bilgileri:", formData);
     console.log("Görsel:", selectedImage);
@@ -179,7 +186,8 @@ export default function AracEklePage() {
                   ❌ Boş Slot Kalmadı!
                 </h3>
                 <p className="text-red-700 mb-4">
-                  Tüm araç slotlarınız dolu. Yeni araç eklemek için paket satın almanız gerekiyor.
+                  Tüm araç slotlarınız dolu. Yeni araç eklemek için paket satın
+                  almanız gerekiyor.
                 </p>
                 <Link href="/dashboard/paket-sec">
                   <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
@@ -190,11 +198,13 @@ export default function AracEklePage() {
             </div>
           </div>
         ) : (
-          <div className={`rounded-xl p-4 mb-6 border-2 ${
-            packageInfo.availableSlots <= 1
-              ? "bg-orange-50 border-orange-500"
-              : "bg-blue-50 border-blue-500"
-          }`}>
+          <div
+            className={`rounded-xl p-4 mb-6 border-2 ${
+              packageInfo.availableSlots <= 1
+                ? "bg-orange-50 border-orange-500"
+                : "bg-blue-50 border-blue-500"
+            }`}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {packageInfo.availableSlots <= 1 ? (
@@ -203,24 +213,35 @@ export default function AracEklePage() {
                   <IoCloudUpload className="text-blue-500" size={24} />
                 )}
                 <div>
-                  <p className={`font-bold ${
-                    packageInfo.availableSlots <= 1 ? "text-orange-800" : "text-blue-800"
-                  }`}>
+                  <p
+                    className={`font-bold ${
+                      packageInfo.availableSlots <= 1
+                        ? "text-orange-800"
+                        : "text-blue-800"
+                    }`}
+                  >
                     {packageInfo.availableSlots} Boş Slot Kaldı
                   </p>
-                  <p className={`text-sm ${
-                    packageInfo.availableSlots <= 1 ? "text-orange-600" : "text-blue-600"
-                  }`}>
-                    {packageInfo.usedSlots} / {packageInfo.totalSlots} slot kullanımda
+                  <p
+                    className={`text-sm ${
+                      packageInfo.availableSlots <= 1
+                        ? "text-orange-600"
+                        : "text-blue-600"
+                    }`}
+                  >
+                    {packageInfo.usedSlots} / {packageInfo.totalSlots} slot
+                    kullanımda
                   </p>
                 </div>
               </div>
               <Link href="/dashboard/paket-sec">
-                <button className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  packageInfo.availableSlots <= 1
-                    ? "bg-orange-500 hover:bg-orange-600 text-white"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
-                }`}>
+                <button
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    packageInfo.availableSlots <= 1
+                      ? "bg-orange-500 hover:bg-orange-600 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
+                >
                   Daha Fazla Slot Al
                 </button>
               </Link>
@@ -437,65 +458,6 @@ export default function AracEklePage() {
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="A12345678"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Şasi Numarası *
-                </label>
-                <input
-                  type="text"
-                  name="chassisNumber"
-                  value={formData.registrationInfo.chassisNumber}
-                  onChange={handleRegistrationChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="WBA1234567890ABCD"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Motor Numarası *
-                </label>
-                <input
-                  type="text"
-                  name="engineNumber"
-                  value={formData.registrationInfo.engineNumber}
-                  onChange={handleRegistrationChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="M123456789"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  İlk Tescil Tarihi *
-                </label>
-                <input
-                  type="date"
-                  name="registrationDate"
-                  value={formData.registrationInfo.registrationDate}
-                  onChange={handleRegistrationChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ruhsat Sahibi Ad Soyad *
-                </label>
-                <input
-                  type="text"
-                  name="ownerName"
-                  value={formData.registrationInfo.ownerName}
-                  onChange={handleRegistrationChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Ahmet Yılmaz"
                 />
               </div>
 

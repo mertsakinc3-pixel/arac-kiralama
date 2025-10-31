@@ -52,8 +52,11 @@ export default function LoginPage() {
     } else {
       if (!formData.phone) {
         newErrors.phone = "Telefon numarası gereklidir";
-      } else if (!/^(\+90|0)?[5][0-9]{9}$/.test(formData.phone.replace(/\s/g, ""))) {
-        newErrors.phone = "Geçerli bir telefon numarası giriniz (örn: 0555 123 45 67)";
+      } else if (
+        !/^(\+90|0)?[5][0-9]{9}$/.test(formData.phone.replace(/\s/g, ""))
+      ) {
+        newErrors.phone =
+          "Geçerli bir telefon numarası giriniz (örn: 0555 123 45 67)";
       }
     }
 
@@ -67,7 +70,8 @@ export default function LoginPage() {
     if (validateForm()) {
       // Mock kullanıcı verisi oluştur
       const userData = {
-        name: loginType === "email" ? formData.email.split("@")[0] : "Kullanıcı",
+        name:
+          loginType === "email" ? formData.email.split("@")[0] : "Kullanıcı",
         email: loginType === "email" ? formData.email : "",
         phone: loginType === "phone" ? formData.phone : "",
         loginType: loginType,
@@ -85,16 +89,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-start py-16 sm:px-8 lg:px-12">
-      {/* Logo */}
-      <div className="text-center mb-8">
-        <Link href="/" className="inline-block">
-          <h1 className="text-4xl font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer">
-            KiralamaYeri
-          </h1>
-        </Link>
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-start py-16 px-4">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
@@ -127,10 +122,15 @@ export default function LoginPage() {
                       name="loginType"
                       value="email"
                       checked={loginType === "email"}
-                      onChange={(e) => setLoginType(e.target.value as "email" | "phone")}
+                      onChange={(e) =>
+                        setLoginType(e.target.value as "email" | "phone")
+                      }
                       className="w-4 h-4 text-blue-600"
                     />
-                    <Label htmlFor="email-login" className="text-sm font-normal cursor-pointer">
+                    <Label
+                      htmlFor="email-login"
+                      className="text-sm font-normal cursor-pointer"
+                    >
                       Email ile giriş
                     </Label>
                   </div>
@@ -141,10 +141,15 @@ export default function LoginPage() {
                       name="loginType"
                       value="phone"
                       checked={loginType === "phone"}
-                      onChange={(e) => setLoginType(e.target.value as "email" | "phone")}
+                      onChange={(e) =>
+                        setLoginType(e.target.value as "email" | "phone")
+                      }
                       className="w-4 h-4 text-blue-600"
                     />
-                    <Label htmlFor="phone-login" className="text-sm font-normal cursor-pointer">
+                    <Label
+                      htmlFor="phone-login"
+                      className="text-sm font-normal cursor-pointer"
+                    >
                       Telefon ile giriş
                     </Label>
                   </div>
@@ -188,7 +193,6 @@ export default function LoginPage() {
                   <p className="text-sm text-red-600">{errors.phone}</p>
                 )}
               </div>
-
 
               {/* Submit Button */}
               <Button type="submit" className="w-full" size="lg">

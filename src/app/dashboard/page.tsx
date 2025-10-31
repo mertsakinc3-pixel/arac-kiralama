@@ -531,15 +531,6 @@ export default function DashboardPage() {
                     5 saat önce
                   </span>
                 </div>
-                <div className="flex items-center p-3 bg-gray-50 rounded-lg">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
-                  <p className="text-sm text-gray-700">
-                    Araç iade edildi - Audi A4
-                  </p>
-                  <span className="ml-auto text-xs text-gray-500">
-                    1 gün önce
-                  </span>
-                </div>
               </div>
             </div>
           </div>

@@ -6,7 +6,6 @@ import "../style/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { FilterProvider } from "@/contexts/FilterContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +27,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <FilterProvider>
-          <Header />
-          <main className="grow pb-16 md:pb-0">
-            {children}
-          </main>
-          <Footer />
-          <MobileBottomNav />
-        </FilterProvider>
+        <Header />
+        <main className="grow pb-16 md:pb-0">
+          {children}
+        </main>
+        <Footer />
+        <MobileBottomNav />
       </body>
     </html>
   );

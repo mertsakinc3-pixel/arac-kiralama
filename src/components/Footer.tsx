@@ -55,6 +55,11 @@ const Footer = () => {
                   Anlaşmalı Firmalar
                 </Link>
               </li>
+              <li>
+                <Link href="/support" className="hover:text-white transition-colors text-sm">
+                  Acil Durum Desteği
+                </Link>
+              </li>
             </ul>
           </div>
 

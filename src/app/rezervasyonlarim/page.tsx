@@ -16,6 +16,7 @@ import {
   IoChevronUp,
 } from "react-icons/io5";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 // Mock rezervasyon verileri
@@ -359,11 +360,13 @@ export default function RezervasyonlarimPage() {
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">
                     {/* Araç Görseli */}
-                    <div className="w-full md:w-48 h-32 rounded-lg overflow-hidden shrink-0">
-                      <img
+                    <div className="relative w-full md:w-48 h-32 rounded-lg overflow-hidden shrink-0">
+                      <Image
                         src={reservation.carImage}
                         alt={`${reservation.carBrand} ${reservation.carModel}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 192px"
                       />
                     </div>
 

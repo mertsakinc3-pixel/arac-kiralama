@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { Car } from "@/data/mockCars";
 import { IoMdClose, IoMdInformationCircleOutline } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import RentalModal from "@/components/RentalModal";
 import {
   FaBluetoothB,
   FaIdCard,
@@ -49,6 +49,7 @@ export function CarCard({
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null
   );
+  const [showRentalModal, setShowRentalModal] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -328,18 +329,26 @@ export function CarCard({
             </div>
 
             <div className="pt-2 pointer-events-auto">
-              <Link href={`/arac/${car.id}`}>
-                <button className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between hover:bg-blue-600 transition-colors">
-                  <span className="text-white font-bold text-sm">
-                    HEMEN KİRALA
-                  </span>
-                  <MdKeyboardArrowRight className="text-white text-2xl" />
-                </button>
-              </Link>
+              <button 
+                onClick={() => setShowRentalModal(true)}
+                className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg font-bold flex items-center justify-between hover:bg-blue-600 transition-colors"
+              >
+                <span className="text-white font-bold text-sm">
+                  HEMEN KİRALA
+                </span>
+                <MdKeyboardArrowRight className="text-white text-2xl" />
+              </button>
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Rental Modal */}
+      <RentalModal 
+        car={car}
+        isOpen={showRentalModal}
+        onClose={() => setShowRentalModal(false)}
+      />
     </>
   );
 }

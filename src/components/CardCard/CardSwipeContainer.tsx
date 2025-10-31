@@ -4,20 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { mockCars, Car } from "@/data/mockCars";
 import { CarCard } from "./CarCard";
 import FilterPanel from "../FilterPanel";
+import { IoFilter } from "react-icons/io5";
 
-interface CardSwipeContainerProps {
-  isFilterOpen?: boolean;
-  setIsFilterOpen?: (isOpen: boolean) => void;
-}
-
-const CardSwipeContainer = ({
-  isFilterOpen,
-  setIsFilterOpen,
-}: CardSwipeContainerProps) => {
+const CardSwipeContainer = () => {
   const [allCars] = useState<Car[]>(mockCars);
   const [cars, setCars] = useState<Car[]>(mockCars);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     // LocalStorage'dan favorileri yükle
@@ -76,26 +70,33 @@ const CardSwipeContainer = ({
 
   return (
     <div className="w-full pb-8 pt-4 scroll-smooth">
-      {/* Filter Panel */}
-      <div className="mb-4">
-        <FilterPanel
-          cars={allCars}
-          filteredCars={cars}
-          onFilter={handleFilterChange}
-          isOpen={isFilterOpen}
-          setIsOpen={setIsFilterOpen}
-        />
-      </div>
-
-      {/* Header */}
+      {/* Header with Filter Button */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-          Araçlarını Keşfet
-        </h2>
+        <div className="flex items-center justify-center gap-4 mb-2">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+            Araçlarını Keşfet
+          </h2>
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
+          >
+            <IoFilter className="text-xl" />
+            <span className="hidden sm:inline">Filtrele</span>
+          </button>
+        </div>
         <p className="text-sm sm:text-base lg:text-lg text-gray-600">
           Beğendiğin araçları sağa, beğenmediklerini sola kaydır
         </p>
       </div>
+
+      {/* Filter Panel */}
+      <FilterPanel
+        cars={allCars}
+        filteredCars={cars}
+        onFilter={handleFilterChange}
+        isOpen={isFilterOpen}
+        setIsOpen={setIsFilterOpen}
+      />
 
       {/* Desktop ve Mobile Layout */}
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">

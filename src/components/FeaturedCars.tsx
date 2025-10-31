@@ -1,9 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import { mockCars } from "@/data/mockCars";
 import Image from "next/image";
-import Link from "next/link";
 import { IoTrophy } from "react-icons/io5";
+import RentalModal from "@/components/RentalModal";
+import { Car } from "@/data/mockCars";
 
 export default function FeaturedCars() {
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [showRentalModal, setShowRentalModal] = useState(false);
+
   // Araçlara kiralama sayısı (bidAmount) ekle - gerçek uygulamada bu backend'den gelecek
   const carsWithRentals = mockCars.map((car) => ({
     ...car,
@@ -66,38 +73,48 @@ export default function FeaturedCars() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-wrap justify-center items-center xl:items-end gap-4 xl:gap-3 2xl:gap-4">
         {topRentedCars.map((car, index) => {
           const rank = index + 1;
-          
+
           // Order sınıfları - xl altında normal (1,2,3,4,5), xl'de piramit (4,2,1,3,5)
-          const orderClasses = 
-            rank === 1 ? "xl:order-3" : 
-            rank === 2 ? "xl:order-2" : 
-            rank === 3 ? "xl:order-4" : 
-            rank === 4 ? "xl:order-1" : 
-            "xl:order-5";
-          
+          const orderClasses =
+            rank === 1
+              ? "xl:order-3"
+              : rank === 2
+              ? "xl:order-2"
+              : rank === 3
+              ? "xl:order-4"
+              : rank === 4
+              ? "xl:order-1"
+              : "xl:order-5";
+
           // Boyut ayarları - grid'de otomatik, xl'de sabit genişlik
-          const sizeClasses = 
-            rank === 1 ? "xl:w-56" : // 1. sıra
-            rank === 2 || rank === 3 ? "xl:w-52" : // 2-3. sıra
-            "xl:w-48"; // 4-5. sıra
-          
+          const sizeClasses =
+            rank === 1
+              ? "xl:w-56" // 1. sıra
+              : rank === 2 || rank === 3
+              ? "xl:w-52" // 2-3. sıra
+              : "xl:w-48"; // 4-5. sıra
+
           // Yükseklik ayarları - sadece xl'de scale (daha az fark)
-          const heightScale = 
-            rank === 1 ? "xl:scale-y-105" : // 1. sıra - %5 daha uzun
-            rank === 2 || rank === 3 ? "xl:scale-y-103" : // 2-3. sıra - %3 daha uzun
-            "xl:scale-y-100"; // 4-5. sıra - normal
-          
-          const ringClasses = 
-            rank === 1 ? "ring-4 ring-yellow-400 shadow-2xl shadow-yellow-400/40" : 
-            rank === 2 || rank === 3 ? "ring-3 ring-gray-300 shadow-xl shadow-gray-400/30" : 
-            rank === 4 ? "ring-2 ring-[#d4a89a]" :
-            "ring-2 ring-[#bf8970]";
-          
+          const heightScale =
+            rank === 1
+              ? "xl:scale-y-105" // 1. sıra - %5 daha uzun
+              : rank === 2 || rank === 3
+              ? "xl:scale-y-103" // 2-3. sıra - %3 daha uzun
+              : "xl:scale-y-100"; // 4-5. sıra - normal
+
+          const ringClasses =
+            rank === 1
+              ? "ring-4 ring-yellow-400 shadow-2xl shadow-yellow-400/40"
+              : rank === 2 || rank === 3
+              ? "ring-3 ring-gray-300 shadow-xl shadow-gray-400/30"
+              : rank === 4
+              ? "ring-2 ring-[#d4a89a]"
+              : "ring-2 ring-[#bf8970]";
+
           return (
-            <Link
+            <button
               key={car.id}
-              href={`/arac/${car.id}`}
-              className={`${sizeClasses} ${orderClasses} ${heightScale} ${ringClasses} bg-white rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer block`}
+              className={`${sizeClasses} ${orderClasses} ${heightScale} ${ringClasses} bg-white rounded-lg overflow-hidden block  transition-transform `}
             >
               {/* Sıra Rozeti ve Rent a Car */}
               <div
@@ -115,11 +132,15 @@ export default function FeaturedCars() {
                       {rank}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className={`text-white font-bold leading-tight break-words ${
-                        rank === 1 ? "text-base" : 
-                        rank === 2 || rank === 3 ? "text-sm" : 
-                        "text-xs"
-                      }`}>
+                      <div
+                        className={`text-white font-bold leading-tight break-words ${
+                          rank === 1
+                            ? "text-base"
+                            : rank === 2 || rank === 3
+                            ? "text-sm"
+                            : "text-xs"
+                        }`}
+                      >
                         {car.rentalCompany}
                       </div>
                     </div>
@@ -129,11 +150,15 @@ export default function FeaturedCars() {
               </div>
 
               {/* Araç Görseli */}
-              <div className={`relative ${
-                rank === 1 ? "h-48 xl:h-44" : 
-                rank === 2 || rank === 3 ? "h-48 xl:h-42" : 
-                "h-48 xl:h-40"
-              }`}>
+              <div
+                className={`relative ${
+                  rank === 1
+                    ? "h-48 xl:h-44"
+                    : rank === 2 || rank === 3
+                    ? "h-48 xl:h-42"
+                    : "h-48 xl:h-40"
+                }`}
+              >
                 <Image
                   src={car.image}
                   alt={`${car.brand} ${car.model}`}
@@ -194,10 +219,22 @@ export default function FeaturedCars() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </button>
           );
         })}
       </div>
+
+      {/* Rental Modal */}
+      {selectedCar && (
+        <RentalModal
+          car={selectedCar}
+          isOpen={showRentalModal}
+          onClose={() => {
+            setShowRentalModal(false);
+            setSelectedCar(null);
+          }}
+        />
+      )}
     </div>
   );
 }

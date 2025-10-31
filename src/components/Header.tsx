@@ -2,17 +2,22 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu, IoFilter, IoChevronDown, IoPersonCircle } from "react-icons/io5";
+import { IoMenu, IoChevronDown, IoPersonCircle } from "react-icons/io5";
 import { IoCalendarOutline, IoHeartOutline, IoSettingsOutline, IoLogOutOutline } from "react-icons/io5";
 import SideMenu from "./SideMenu";
-import { useFilter } from "@/contexts/FilterContext";
 import Link from "next/link";
+
+// Geçici user type - Backend bağlanınca güncellenecek
+interface TempUser {
+  name?: string;
+  email?: string;
+  // Backend'den gelecek diğer alanlar buraya eklenecek
+}
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const { setIsFilterOpen } = useFilter();
+  const [user, setUser] = useState<TempUser | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -21,6 +26,7 @@ const Header = () => {
     // LocalStorage'dan kullanıcı bilgilerini kontrol et
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(JSON.parse(savedUser));
     }
   }, [pathname]); // pathname değiştiğinde yeniden kontrol et
@@ -39,10 +45,6 @@ const Header = () => {
     };
   }, []);
 
-  const handleFilterClick = () => {
-    setIsFilterOpen(true);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
@@ -50,23 +52,18 @@ const Header = () => {
     router.push("/");
   };
 
-  // Filter ikonu sadece arac-kirala sayfasında görünsün
-  const showFilterIcon = pathname === "/arac-kirala";
-
   return (
     <>
-      <header className="flex justify-between items-center p-4 w-full h-20 border-b border-gray-200 shadow-sm">
+      <header className="relative flex items-center p-4 w-full h-20 border-b border-gray-200 shadow-sm">
         {/* Left Hambuger side menu  */}
-
-        <div>
+        <div className="flex items-center z-10">
           <button onClick={() => setIsMenuOpen(true)}>
             <IoMenu className="text-2xl" />
           </button>
         </div>
 
-        {/* Middle company logo */}
-
-        <div>
+        {/* Middle company logo - Absolute centered */}
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <Link href="/" className="flex items-center">
             <div className="relative group">
               {/* Kare Container - Modern Tasarım */}
@@ -97,15 +94,8 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Right side - User menu or filter */}
-        <div className="flex items-center gap-3">
-          {/* Filter button - sadece arac-kirala sayfasında görünür */}
-          {showFilterIcon && (
-            <button onClick={handleFilterClick} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <IoFilter className="text-2xl" />
-            </button>
-          )}
-
+        {/* Right side - User menu */}
+        <div className="flex items-center gap-3 ml-auto z-10">
           {/* User dropdown menu */}
           {user ? (
             <div className="relative" ref={dropdownRef}>
@@ -118,7 +108,7 @@ const Header = () => {
                 </div>
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-semibold text-gray-800 leading-tight">
-                    {user.name || "Kullanıcı"}
+                    {user?.name || "Kullanıcı"}
                   </p>
                   <p className="text-xs text-gray-500 leading-tight">Hesabım</p>
                 </div>
@@ -135,9 +125,9 @@ const Header = () => {
                   {/* User Info */}
                   <div className="px-4 py-3 border-b border-gray-200">
                     <p className="text-sm font-semibold text-gray-800">
-                      {user.name || "Kullanıcı"}
+                      {user?.name || "Kullanıcı"}
                     </p>
-                    {user.email && (
+                    {user?.email && (
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     )}
                   </div>

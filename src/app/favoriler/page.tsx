@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Star, Fuel, Settings, Users, MapPin, Trash2, Calendar, Building2, Car } from "lucide-react";
-import { mockCars } from "@/data/mockCars";
+import { Heart, Star, Fuel, Settings, Users, MapPin, Trash2, Calendar, Building2, Car as CarIcon } from "lucide-react";
+import { mockCars, Car } from "@/data/mockCars";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import RentalModal from "@/components/RentalModal";
 
 export default function Favoriler() {
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -17,7 +17,9 @@ export default function Favoriler() {
     }
     return [];
   });
-  const router = useRouter();
+  
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [showRentalModal, setShowRentalModal] = useState(false);
 
   const handleRemoveFavorite = (carId: string) => {
     const updatedFavorites = favorites.filter((id) => id !== carId);
@@ -25,9 +27,9 @@ export default function Favoriler() {
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
-  const handleRentNow = (carId: string) => {
-    // Araç kiralama sayfasına yönlendir
-    router.push(`/arac-kirala?carId=${carId}`);
+  const handleRentNow = (car: Car) => {
+    setSelectedCar(car);
+    setShowRentalModal(true);
   };
 
   const favoriteCars = mockCars.filter((car) => favorites.includes(car.id));
@@ -104,10 +106,10 @@ export default function Favoriler() {
                           </span>
                         </div>
                         <button
-                          onClick={() => handleRentNow(car.id)}
+                          onClick={() => handleRentNow(car)}
                           className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
-                          <Car className="w-4 h-4" />
+                          <CarIcon className="w-4 h-4" />
                           Hemen Kirala
                         </button>
                       </div>
@@ -235,11 +237,11 @@ export default function Favoriler() {
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <button
-                            onClick={() => handleRentNow(car.id)}
+                            onClick={() => handleRentNow(car)}
                             className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm"
                             title="Hemen Kirala"
                           >
-                            <Car className="w-4 h-4" />
+                            <CarIcon className="w-4 h-4" />
                             Kirala
                           </button>
                           <button
@@ -266,6 +268,18 @@ export default function Favoriler() {
           </div>
         )}
       </div>
+
+      {/* Rental Modal */}
+      {selectedCar && (
+        <RentalModal 
+          car={selectedCar}
+          isOpen={showRentalModal}
+          onClose={() => {
+            setShowRentalModal(false);
+            setSelectedCar(null);
+          }}
+        />
+      )}
     </div>
   );
 }
