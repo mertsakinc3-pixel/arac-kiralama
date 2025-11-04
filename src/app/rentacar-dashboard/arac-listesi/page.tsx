@@ -142,7 +142,7 @@ ${url}
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <Link href="/dashboard" className="mr-4">
+            <Link href="/rentacar-dashboard" className="mr-4">
               <button className="flex items-center text-gray-600 hover:text-gray-800">
                 <IoArrowBack size={24} />
               </button>

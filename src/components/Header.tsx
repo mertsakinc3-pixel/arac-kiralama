@@ -135,7 +135,7 @@ const Header = () => {
                   {/* Menu Items */}
                   <div className="py-1">
                     <Link
-                      href="/rezervasyonlarim"
+                      href="/user-dashboard/rezervasyonlarim"
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
@@ -144,7 +144,7 @@ const Header = () => {
                     </Link>
 
                     <Link
-                      href="/favoriler"
+                      href="/user-dashboard/favoriler"
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
@@ -153,7 +153,7 @@ const Header = () => {
                     </Link>
 
                     <Link
-                      href="/ayarlar"
+                      href="/user-dashboard/ayarlar"
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
                     >

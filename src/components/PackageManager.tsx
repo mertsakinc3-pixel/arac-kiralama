@@ -225,7 +225,7 @@ export default function PackageManager() {
 
           {/* Aksiyon Butonları */}
           <div className="mt-4">
-            <Link href="/dashboard/paket-sec" className="block">
+            <Link href="/rentacar-dashboard/paket-sec" className="block">
               <button className="w-full bg-slate-700 hover:bg-slate-800 text-white py-3.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                 <IoAdd size={22} />
                 Yeni Paket Al
@@ -312,7 +312,7 @@ export default function PackageManager() {
             <div className="text-center py-8">
               <IoCarSport className="text-slate-300 mx-auto mb-3" size={48} />
               <p className="text-slate-500">Henüz araç eklemediniz</p>
-              <Link href="/dashboard/arac-ekle">
+              <Link href="/rentacar-dashboard/arac-ekle">
                 <button className="mt-4 bg-slate-700 hover:bg-slate-800 text-white px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
                   İlk Aracı Ekle
                 </button>
@@ -326,7 +326,7 @@ export default function PackageManager() {
               <p className="text-sm text-slate-600 mb-3">
                 <strong>{packageInfo.availableSlots}</strong> boş slotunuz var
               </p>
-              <Link href="/dashboard/arac-ekle">
+              <Link href="/rentacar-dashboard/arac-ekle">
                 <button className="w-full bg-slate-700 hover:bg-slate-800 text-white py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
                   <IoAdd size={20} />
                   Yeni Araç Ekle

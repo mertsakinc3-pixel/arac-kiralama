@@ -20,12 +20,12 @@ export default function MobileBottomNav() {
     },
     {
       name: "Favoriler",
-      href: "/favoriler",
+      href: "/user-dashboard/favoriler",
       icon: Heart,
     },
     {
-      name: "Profil",
-      href: "/profil",
+      name: "Ayarlar",
+      href: "/user-dashboard/ayarlar",
       icon: User,
     },
   ];

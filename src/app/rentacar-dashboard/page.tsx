@@ -446,7 +446,7 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Araç Ekleme Butonu */}
-                <Link href="/dashboard/arac-ekle">
+                <Link href="/rentacar-dashboard/arac-ekle">
                   <div className="group cursor-pointer bg-linear-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-xl p-8 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     <div className="flex flex-col items-center text-center">
                       <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
@@ -461,7 +461,7 @@ export default function DashboardPage() {
                 </Link>
 
                 {/* Rezervasyonlar Butonu */}
-                <Link href="/dashboard/rezervasyonlar">
+                <Link href="/rentacar-dashboard/rezervasyonlar">
                   <div className="group cursor-pointer bg-linear-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-xl p-8 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     <div className="flex flex-col items-center text-center">
                       <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
@@ -476,7 +476,7 @@ export default function DashboardPage() {
                 </Link>
 
                 {/* Araç Listesi Butonu */}
-                <Link href="/dashboard/arac-listesi">
+                <Link href="/rentacar-dashboard/arac-listesi">
                   <div className="group cursor-pointer bg-linear-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-xl p-8 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     <div className="flex flex-col items-center text-center">
                       <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
@@ -491,7 +491,7 @@ export default function DashboardPage() {
                 </Link>
 
                 {/* Sigorta Yap Butonu */}
-                <Link href="/dashboard/sigorta">
+                <Link href="/rentacar-dashboard/sigorta">
                   <div className="group cursor-pointer bg-linear-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-xl p-8 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     <div className="flex flex-col items-center text-center">
                       <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">

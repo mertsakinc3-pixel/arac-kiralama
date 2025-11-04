@@ -11,7 +11,6 @@ import {
   Moon,
   Sun,
   Save,
-  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +38,6 @@ export default function AyarlarPage() {
       alert("Profil bilgileriniz başarıyla güncellendi!");
     }
   };
-
 
   const tabs = [
     { id: "profile", label: "Profil Bilgileri", icon: User },
@@ -130,28 +128,6 @@ export default function AyarlarPage() {
                             }
                             className="pl-10"
                             placeholder="Soyadınız"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="tcNo">TC Kimlik No</Label>
-                        <div className="relative">
-                          <CreditCard
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                            size={18}
-                          />
-                          <Input
-                            id="tcNo"
-                            type="text"
-                            maxLength={11}
-                            value={user?.tcNo || ""}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, "");
-                              setUser({ ...user, tcNo: value });
-                            }}
-                            className="pl-10"
-                            placeholder="TC Kimlik Numaranız"
                           />
                         </div>
                       </div>

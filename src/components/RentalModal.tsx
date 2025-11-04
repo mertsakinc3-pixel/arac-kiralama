@@ -153,7 +153,7 @@ export default function RentalModal({ car, isOpen, onClose }: RentalModalProps) 
       // Başarı mesajı ve yönlendirme
       alert("Rezervasyonunuz başarıyla oluşturuldu! Hesabınız da oluşturuldu.");
       handleClose();
-      router.push("/rezervasyonlarim");
+      router.push("/user-dashboard/rezervasyonlarim");
     }
   };
 

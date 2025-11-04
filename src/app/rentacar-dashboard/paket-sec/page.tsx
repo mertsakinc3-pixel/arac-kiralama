@@ -64,7 +64,7 @@ export default function PaketSecPage() {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Link href="/dashboard" className="mr-4">
+          <Link href="/rentacar-dashboard" className="mr-4">
             <button className="flex items-center text-slate-600 hover:text-slate-800 transition-colors bg-white p-3 rounded-lg shadow-sm hover:shadow-md">
               <IoArrowBack size={24} />
             </button>

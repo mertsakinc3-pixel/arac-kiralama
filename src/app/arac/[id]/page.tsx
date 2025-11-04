@@ -142,7 +142,7 @@ export default function AracDetayPage() {
       // Başarı mesajı ve yönlendirme
       alert("Rezervasyonunuz başarıyla oluşturuldu! Hesabınız da oluşturuldu.");
       setShowRentalModal(false);
-      router.push("/rezervasyonlarim");
+      router.push("/user-dashboard/rezervasyonlarim");
     }
   };
 
