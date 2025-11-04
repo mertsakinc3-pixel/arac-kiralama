@@ -1,13 +1,23 @@
-import HeroSection from "@/components/HeroSection";
+import dynamic from "next/dynamic";
 import LocationComponent from "@/components/LocationComponent";
 import FeaturedCars from "@/components/FeaturedCars";
-import Testimonials from "@/components/Testimonials";
-import TrustSection from "@/components/TrustSection";
-import CTASection from "@/components/CTASection";
+
+// Below the fold componentleri lazy load
+const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />,
+});
+
+const TrustSection = dynamic(() => import("@/components/TrustSection"), {
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />,
+});
+
+const CTASection = dynamic(() => import("@/components/CTASection"), {
+  loading: () => <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />,
+});
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col items-center justify-start h-full overflow-x-hidden">
       {/* Konum Bölümü - Öne Çıkarıldı */}
       <div className="w-full bg-gradient-to-b from-slate-50 via-gray-50 to-white py-6 lg:py-16 px-4 relative overflow-hidden">
         {/* Arka Plan Dekoratif Elementler */}

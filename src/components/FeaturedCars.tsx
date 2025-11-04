@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { mockCars } from "@/data/mockCars";
 import Image from "next/image";
 import { IoTrophy } from "react-icons/io5";
@@ -12,16 +12,23 @@ export default function FeaturedCars() {
   const [showRentalModal, setShowRentalModal] = useState(false);
 
   // Araçlara kiralama sayısı (bidAmount) ekle - gerçek uygulamada bu backend'den gelecek
-  const carsWithRentals = mockCars.map((car) => ({
-    ...car,
-    // eslint-disable-next-line react-hooks/purity
-    rentalCount: Math.floor(Math.random() * 500) + 100, // 100-600 arası rastgele kiralama sayısı
-  }));
+  const carsWithRentals = useMemo(() => 
+    mockCars.map((car) => ({
+      ...car,
+      // eslint-disable-next-line react-hooks/purity
+      rentalCount: Math.floor(Math.random() * 500) + 100,
+    })),
+    [] // Boş dependency - sadece bir kez çalışır
+  );
 
   // En çok kiralanan 5 aracı sırala (İlçe Liderleri mantığı)
-  const topRentedCars = [...carsWithRentals]
-    .sort((a, b) => b.rentalCount - a.rentalCount)
-    .slice(0, 5);
+  const topRentedCars = useMemo(() => 
+    [...carsWithRentals]
+      .sort((a, b) => b.rentalCount - a.rentalCount)
+      .slice(0, 5),
+    [carsWithRentals]
+  );
+
 
   const getRankColor = (rank: number) => {
     switch (rank) {
@@ -164,6 +171,9 @@ export default function FeaturedCars() {
                   alt={`${car.brand} ${car.model}`}
                   fill
                   className="object-cover"
+                  priority={rank <= 3}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 224px"
+                  quality={85}
                 />
                 <div className="absolute top-2 right-2 bg-yellow-400 text-gray-900 px-2 py-1 rounded-full text-xs font-semibold flex items-center">
                   <svg
