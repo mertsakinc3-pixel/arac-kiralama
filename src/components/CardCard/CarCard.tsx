@@ -179,7 +179,7 @@ export function CarCard({
               alt={`${car.brand} ${car.model}`}
               fill
               className="object-cover"
-              priority={isTop}
+              loading="lazy"
             />
 
             {/* Yakıt Türü */}

@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export default function CTASection() {
   return (
-    <div className="w-full bg-[#d4a89a] text-black py-12 px-4 mt-8">
+    <div className="w-full bg-[#0C5E7D] text-white py-12 px-4 mt-8">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl font-bold mb-4">Hemen Araç Kiralamanın Tam Zamanı!</h2>
-        <p className="text-lg mb-6 text-black">
+        <p className="text-lg mb-6 text-white">
           Binlerce araç seçeneği, uygun fiyatlar ve güvenli kiralama deneyimi için bize katılın.
         </p>
         <Link

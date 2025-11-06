@@ -10,6 +10,7 @@ import { Car } from "@/data/mockCars";
 export default function FeaturedCars() {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [showRentalModal, setShowRentalModal] = useState(false);
+  
 
   // Araçlara kiralama sayısı (bidAmount) ekle - gerçek uygulamada bu backend'den gelecek
   const carsWithRentals = useMemo(() => 
@@ -36,13 +37,13 @@ export default function FeaturedCars() {
         return "from-yellow-300 via-yellow-400 to-yellow-500 shadow-xl shadow-yellow-500/50"; // 1. sıra - Parlak altın
       case 2:
       case 3:
-        return "from-gray-200 via-gray-300 to-gray-400 shadow-lg shadow-gray-400/40"; // 2-3. sıra - Parlak gümüş
+        return "bg-[#E44900] shadow-lg border-2 border-white shadow-lg"; // 2-3. sıra - Parlak gümüş
       case 4:
-        return "bg-[#d4a89a]"; // 4. sıra - Açık Bronze
+        return "bg-[#29A6A3]"; // 4. sıra - Açık Bronze
       case 5:
-        return "bg-[#bf8970]"; // 5. sıra - Koyu Bronze
+        return "bg-[#224942]"; // 5. sıra - Koyu Bronze
       default:
-        return "from-gray-400 to-gray-600";
+        return "border-2 border-white shadow-lg";
     }
   };
 
@@ -54,9 +55,9 @@ export default function FeaturedCars() {
       case 3:
         return "bg-gradient-to-br from-gray-300 to-gray-500 text-gray-900 shadow-md w-9 h-9 text-base"; // 2-3. sıra - Gümüş, orta
       case 4:
-        return "bg-[#d4a89a] text-white w-9 h-9 text-base font-extrabold border-2 border-white shadow-lg"; // 4. sıra - Açık Bronze
+        return "bg-[#29A6A3] text-white w-9 h-9 text-base font-extrabold border-2 border-white shadow-lg"; // 4. sıra - Açık Bronze
       case 5:
-        return "bg-[#bf8970] text-white w-9 h-9 text-base font-extrabold border-2 border-white shadow-lg"; // 5. sıra - Koyu Bronze
+        return "bg-[#224942] text-white w-9 h-9 text-base font-extrabold border-2 border-white shadow-lg"; // 5. sıra - Koyu Bronze
       default:
         return "bg-gradient-to-br from-gray-400 to-gray-600 text-white w-8 h-8";
     }
@@ -139,8 +140,7 @@ export default function FeaturedCars() {
                       {rank}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div
-                        className={`text-white font-bold leading-tight break-words ${
+                      <div className={`text-white font-bold leading-tight break-words ${
                           rank === 1
                             ? "text-base"
                             : rank === 2 || rank === 3
